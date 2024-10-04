@@ -13,6 +13,7 @@
     <artifactId>crm-service-controller</artifactId>
 
     <dependencies>
+        <!--- Modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>crm-service-domain</artifactId>

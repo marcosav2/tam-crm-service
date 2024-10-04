@@ -1,0 +1,384 @@
+openapi: 3.1.0
+info:
+  title: Basic CRM API
+  description: Basic CRM API that provides customer and user management
+  version: 1.0.0
+
+tags:
+  - name: customer
+    description: Customer related operations
+  - name: user
+    description: User related operations
+
+paths:
+  /v1/customers:
+    get:
+      tags:
+        - customer
+      summary: Provides a paged list of all available customers
+      operationId: listCustomers
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 2
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            example: 10
+      responses:
+        200:
+          description: Success response providing customers
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - results
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerOverview'
+                  results:
+                    type: integer
+    post:
+      tags:
+        - customer
+      summary: Creates a new customer
+      operationId: createCustomer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - surname
+              properties:
+                name:
+                  type: string
+                surname:
+                  type: string
+                profileImage:
+                  type: string
+                  format: binary
+            encoding:
+              profileImage:
+                contentType: image/png, image/jpeg
+      responses:
+        200:
+          description: Successfully created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerOverview'
+
+  /v1/customers/{id}:
+    get:
+      tags:
+        - customer
+      summary: Provides details for a specific customer
+      operationId: getCustomer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success response providing customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+
+    put:
+      tags:
+        - customer
+      summary: Updated an existing customer
+      operationId: createCustomer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - surname
+              properties:
+                name:
+                  type: string
+                surname:
+                  type: string
+                profileImage:
+                  type: string
+                  format: binary
+            encoding:
+              profileImage:
+                contentType: image/png, image/jpeg
+      responses:
+        200:
+          description: Successfully updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerOverview'
+
+    delete:
+      tags:
+        - customer
+      summary: Deletes a specific customer
+      operationId: deleteCustomer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Successfully deleted customer
+
+  /v1/users:
+    get:
+      tags:
+        - user
+      summary: Provides a paged list of all available users
+      operationId: listUsers
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 2
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            example: 10
+      responses:
+        200:
+          description: Success response providing users
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - results
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  results:
+                    type: integer
+
+    post:
+      tags:
+        - user
+      summary: Creates a new user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - name
+                - surname
+                - role
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/UserRole'
+      responses:
+        200:
+          description: Successfully created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /v1/users/{id}:
+    get:
+      tags:
+        - user
+      summary: Provides details for a specific user
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success response providing users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags:
+        - user
+      summary: Updated an existing user
+      operationId: createUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - name
+                - surname
+                - role
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                role:
+                  $ref: '#/components/schemas/UserRole'
+      responses:
+        200:
+          description: Successfully updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    delete:
+      tags:
+        - user
+      summary: Deletes a specific user
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Successfully deleted user
+
+components:
+  schemas:
+    CustomerOverview:
+      type: object
+      required:
+        - id
+        - name
+        - surname
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+        profilePhotoUrl:
+          type: string
+
+    Customer:
+      type: object
+      required:
+        - id
+        - name
+        - surname
+        - createdAt
+        - createdBy
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+        profilePhotoUrl:
+          type: string
+        createdAt:
+          type: string
+          format: LocalDateTime
+          example: "2024-06-14T00:05:00"
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: LocalDateTime
+          example: "2024-07-14T00:05:00"
+        updatedBy:
+          type: string
+
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - name
+        - surname
+        - role
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+
+    UserRole:
+      type: string
+      enum:
+        - ADMIN
+        - USER

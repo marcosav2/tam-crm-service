@@ -18,9 +18,11 @@
         <module>application</module>
         <module>infrastructure</module>
         <module>controller</module>
+        <module>boot</module>
     </modules>
 
     <dependencyManagement>
+        <!--- Modules -->
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -30,6 +32,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>crm-service-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>crm-service-controller</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
