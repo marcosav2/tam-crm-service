@@ -1,0 +1,7 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 20MB
+
+server.tomcat.max-swallow-size: -1
