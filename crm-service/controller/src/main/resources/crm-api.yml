@@ -85,11 +85,11 @@ paths:
                 contentType: image/png, image/jpeg
       responses:
         201:
-          description: Successfully created user
+          description: Successfully created customer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerOverview'
+                $ref: '#/components/schemas/CustomerOverview'#/components/responses/CreatedCustomerResponse'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -118,7 +118,7 @@ paths:
             format: uuid
       responses:
         200:
-          description: Success response providing customers
+          description: Customer details response
           content:
             application/json:
               schema:
@@ -167,7 +167,7 @@ paths:
                 contentType: image/png, image/jpeg
       responses:
         200:
-          description: Successfully updated user
+          description: Successfully updated customer
           content:
             application/json:
               schema:
@@ -347,7 +347,7 @@ paths:
             format: uuid
       responses:
         200:
-          description: Success response providing users
+          description: User details response
           content:
             application/json:
               schema:
@@ -448,8 +448,8 @@ components:
       description: Bad request
       content:
         application/json:
-        schema:
-          $ref: '#/components/schemas/ErrorResponse'
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Unauthorized:
       description: Unauthorized access
       content:
