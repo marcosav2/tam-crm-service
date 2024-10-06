@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.Builder;
 
-@Builder
+@Builder(toBuilder = true)
 public record Customer(
     UUID id,
     String name,
@@ -13,4 +13,5 @@ public record Customer(
     OffsetDateTime createdAt,
     String createdBy,
     OffsetDateTime updatedAt,
-    String updatedBy) {}
+    String updatedBy,
+    boolean active) {}

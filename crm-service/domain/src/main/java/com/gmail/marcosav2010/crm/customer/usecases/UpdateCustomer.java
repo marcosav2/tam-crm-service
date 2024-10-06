@@ -5,5 +5,5 @@ import java.io.InputStream;
 
 public interface UpdateCustomer {
 
-  Customer execute(Customer customer, InputStream profileImage);
+  Customer execute(Customer customer, InputStream profileImage, String user);
 }

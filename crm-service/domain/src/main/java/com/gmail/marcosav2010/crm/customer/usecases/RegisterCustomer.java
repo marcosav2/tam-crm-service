@@ -5,5 +5,5 @@ import java.io.InputStream;
 
 public interface RegisterCustomer {
 
-  Customer execute(Customer customer, InputStream profileImage);
+  Customer execute(Customer customer, InputStream profileImage, String user);
 }

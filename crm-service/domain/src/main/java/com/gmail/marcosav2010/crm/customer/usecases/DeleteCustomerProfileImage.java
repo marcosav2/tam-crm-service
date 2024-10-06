@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface DeleteCustomerProfileImage {
 
-  void execute(UUID id);
+  void execute(UUID id, String user);
 }
