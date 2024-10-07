@@ -19,7 +19,7 @@ public class ListActiveUsersImpl implements ListActiveUsers {
   private final UserPort userPort;
 
   @Override
-  public Paged<User> execute(UserListRequest request) {
+  public Paged<User> execute(final UserListRequest request) {
     log.debug("Listing users for {}", request);
 
     if (request.page().size() > PageConstants.MAX_PAGE_SIZE) {

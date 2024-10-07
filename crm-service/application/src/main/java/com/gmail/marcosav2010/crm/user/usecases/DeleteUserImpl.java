@@ -16,7 +16,7 @@ public class DeleteUserImpl implements DeleteUser {
   private final UserPort userPort;
 
   @Override
-  public void execute(UUID id) {
+  public void execute(final UUID id) {
     log.debug("Getting user details for id: {}", id);
     final User existingUser =
         userPort.findById(id).orElseThrow(() -> new UserNotFound("User not found for id: " + id));

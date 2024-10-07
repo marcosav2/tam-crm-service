@@ -15,7 +15,7 @@ public class CreateUserImpl implements CreateUser {
   private final UserPort userPort;
 
   @Override
-  public User execute(User user) {
+  public User execute(final User user) {
     log.debug("Creating user {}", user);
 
     final var existingUsernameUser = userPort.findByUsername(user.username());

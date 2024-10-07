@@ -15,7 +15,7 @@ public class UpdateUserImpl implements UpdateUser {
   private final UserPort userPort;
 
   @Override
-  public User execute(User user) {
+  public User execute(final User user) {
     log.debug("Getting user details for id: {}", user.id());
     final User existingUser =
         userPort

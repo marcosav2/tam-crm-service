@@ -16,7 +16,7 @@ public class GetUserDetailsImpl implements GetUserDetails {
   private final UserPort userPort;
 
   @Override
-  public User execute(UUID id) {
+  public User execute(final UUID id) {
     log.debug("Getting user details for id: {}", id);
     return userPort
         .findById(id)

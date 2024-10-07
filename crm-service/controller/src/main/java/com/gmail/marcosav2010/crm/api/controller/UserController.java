@@ -1,20 +1,23 @@
-package com.gmail.marcosav2010.crm.api;
+package com.gmail.marcosav2010.crm.api.controller;
 
-import com.gmail.marcosav2010.crm.api.controller.UserApi;
 import com.gmail.marcosav2010.crm.api.dto.CreateUserRequestDTO;
 import com.gmail.marcosav2010.crm.api.dto.ListUsers200ResponseDTO;
 import com.gmail.marcosav2010.crm.api.dto.UpdateUserRequestDTO;
 import com.gmail.marcosav2010.crm.api.dto.UserDTO;
+import com.gmail.marcosav2010.crm.api.mappers.ControllerUserMapper;
+import com.gmail.marcosav2010.crm.shared.entities.Page;
+import com.gmail.marcosav2010.crm.user.entities.UserListRequest;
 import com.gmail.marcosav2010.crm.user.usecases.*;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequiredArgsConstructor
 public class UserController implements UserApi {
+
+  private final ControllerUserMapper mapper;
 
   private final CreateUser createUser;
   private final DeleteUser deleteUser;
@@ -24,26 +27,29 @@ public class UserController implements UserApi {
 
   @Override
   public ResponseEntity<UserDTO> createUser(CreateUserRequestDTO createUserRequestDTO) {
-    return null;
+    return ResponseEntity.ok(mapper.map(createUser.execute(mapper.map(createUserRequestDTO))));
   }
 
   @Override
   public ResponseEntity<Void> deleteUser(UUID id) {
-    return null;
+    deleteUser.execute(id);
+    return ResponseEntity.ok().build();
   }
 
   @Override
   public ResponseEntity<UserDTO> getUser(UUID id) {
-    return null;
+    return ResponseEntity.ok(mapper.map(getUser.execute(id)));
   }
 
   @Override
   public ResponseEntity<ListUsers200ResponseDTO> listUsers(Integer page, Integer size) {
-    return null;
+    final var request =
+        UserListRequest.builder().page(Page.builder().page(page).size(size).build()).build();
+    return ResponseEntity.ok(mapper.map(listUsers.execute(request)));
   }
 
   @Override
   public ResponseEntity<UserDTO> updateUser(UUID id, UpdateUserRequestDTO updateUserRequestDTO) {
-    return null;
+    return ResponseEntity.ok(mapper.map(updateUser.execute(mapper.map(id, updateUserRequestDTO))));
   }
 }
