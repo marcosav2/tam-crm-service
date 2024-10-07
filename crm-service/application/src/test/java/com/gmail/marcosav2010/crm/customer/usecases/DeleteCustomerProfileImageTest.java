@@ -1,4 +1,4 @@
-package com.gmail.marcosav.crm.customer.usecases;
+package com.gmail.marcosav2010.crm.customer.usecases;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -7,7 +7,6 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
-import com.gmail.marcosav2010.crm.customer.usecases.DeleteCustomerProfileImageImpl;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,13 @@ class DeleteCustomerProfileImageTest {
   void execute_existingCustomerWithImage_deleteImageAndUnlink() {
     final UUID id = UUID.randomUUID();
     final String oldImageKey = "old";
-    final var customer = Customer.builder().id(id).profileImageUrl(oldImageKey).build();
+    final var customer =
+        Customer.builder()
+            .id(id)
+            .name("name")
+            .surname("surname")
+            .profileImageUrl(oldImageKey)
+            .build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 
@@ -57,7 +62,8 @@ class DeleteCustomerProfileImageTest {
   @Test
   void execute_existingCustomerWithoutImage_ignore() {
     final UUID id = UUID.randomUUID();
-    final var customer = Customer.builder().id(id).profileImageUrl(null).build();
+    final var customer =
+        Customer.builder().id(id).name("name").surname("surname").profileImageUrl(null).build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 

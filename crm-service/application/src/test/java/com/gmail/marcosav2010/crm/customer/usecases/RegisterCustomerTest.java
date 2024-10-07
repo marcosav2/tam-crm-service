@@ -1,4 +1,4 @@
-package com.gmail.marcosav.crm.customer.usecases;
+package com.gmail.marcosav2010.crm.customer.usecases;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

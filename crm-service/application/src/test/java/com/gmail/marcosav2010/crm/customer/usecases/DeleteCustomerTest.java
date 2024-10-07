@@ -1,4 +1,4 @@
-package com.gmail.marcosav.crm.customer.usecases;
+package com.gmail.marcosav2010.crm.customer.usecases;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.usecases.DeleteCustomerImpl;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,8 @@ class DeleteCustomerTest {
   @Test
   void execute_existing_deactivate() {
     final UUID id = UUID.randomUUID();
-    final var customer = Customer.builder().id(id).active(true).build();
+    final var customer =
+        Customer.builder().id(id).name("name").surname("surname").active(true).build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 

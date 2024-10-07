@@ -1,4 +1,4 @@
-package com.gmail.marcosav.crm.customer.usecases;
+package com.gmail.marcosav2010.crm.customer.usecases;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,7 +8,6 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.entities.CustomerListRequest;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
-import com.gmail.marcosav2010.crm.customer.usecases.ListActiveCustomersImpl;
 import com.gmail.marcosav2010.crm.shared.entities.Page;
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +42,13 @@ class ListActiveCustomersTest {
     final var request =
         CustomerListRequest.builder().page(Page.builder().page(1).size(10).build()).build();
 
-    final var customer = Customer.builder().id(UUID.randomUUID()).profileImageUrl("img").build();
+    final var customer =
+        Customer.builder()
+            .id(UUID.randomUUID())
+            .name("name")
+            .surname("surname")
+            .profileImageUrl("img")
+            .build();
 
     when(customerPort.findActive(1, 10)).thenReturn(List.of(customer));
     when(customerPort.countActive()).thenReturn(1L);
@@ -71,7 +76,13 @@ class ListActiveCustomersTest {
     final var request =
         CustomerListRequest.builder().page(Page.builder().page(1).size(10).build()).build();
 
-    final var customer = Customer.builder().id(UUID.randomUUID()).profileImageUrl(null).build();
+    final var customer =
+        Customer.builder()
+            .id(UUID.randomUUID())
+            .name("name")
+            .surname("surname")
+            .profileImageUrl(null)
+            .build();
 
     when(customerPort.findActive(1, 10)).thenReturn(List.of(customer));
     when(customerPort.countActive()).thenReturn(1L);

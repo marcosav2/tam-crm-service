@@ -1,4 +1,4 @@
-package com.gmail.marcosav.crm.customer.usecases;
+package com.gmail.marcosav2010.crm.customer.usecases;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,7 +8,6 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
-import com.gmail.marcosav2010.crm.customer.usecases.GetCustomerDetailsImpl;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,8 @@ class GetCustomerDetailsTest {
   void execute_existingWithPhoto_generatePhotoAndReturn() {
     final UUID id = UUID.randomUUID();
 
-    final var customer = Customer.builder().id(id).profileImageUrl("img").build();
+    final var customer =
+        Customer.builder().id(id).name("name").surname("surname").profileImageUrl("img").build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 
@@ -60,7 +60,8 @@ class GetCustomerDetailsTest {
   void execute_existingWithoutPhoto_return() {
     final UUID id = UUID.randomUUID();
 
-    final var customer = Customer.builder().id(id).profileImageUrl(null).build();
+    final var customer =
+        Customer.builder().id(id).name("name").surname("surname").profileImageUrl(null).build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 
