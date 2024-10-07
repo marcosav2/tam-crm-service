@@ -75,8 +75,12 @@ paths:
               properties:
                 name:
                   type: string
+                  minLength: 2
+                  maxLength: 20
                 surname:
                   type: string
+                  minLength: 2
+                  maxLength: 30
                 profileImage:
                   type: string
                   format: binary
@@ -157,8 +161,12 @@ paths:
               properties:
                 name:
                   type: string
+                  minLength: 2
+                  maxLength: 20
                 surname:
                   type: string
+                  minLength: 2
+                  maxLength: 30
                 profileImage:
                   type: string
                   format: binary
@@ -306,10 +314,16 @@ paths:
               properties:
                 username:
                   type: string
+                  minLength: 5
+                  maxLength: 16
                 name:
                   type: string
+                  minLength: 2
+                  maxLength: 20
                 surname:
                   type: string
+                  minLength: 2
+                  maxLength: 30
                 role:
                   $ref: '#/components/schemas/UserRole'
       responses:
@@ -381,17 +395,18 @@ paths:
             schema:
               type: object
               required:
-                - username
                 - name
                 - surname
                 - role
               properties:
-                username:
-                  type: string
                 name:
                   type: string
+                  minLength: 2
+                  maxLength: 20
                 surname:
                   type: string
+                  minLength: 2
+                  maxLength: 30
                 role:
                   $ref: '#/components/schemas/UserRole'
       responses:

@@ -4,6 +4,7 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.entities.CustomerListRequest;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.shared.constants.PageConstants;
 import com.gmail.marcosav2010.crm.shared.entities.Page;
 import com.gmail.marcosav2010.crm.shared.entities.Paged;
 import java.util.List;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ListActiveCustomersImpl implements ListActiveCustomers {
 
-  static final int MAX_PAGE_SIZE = 50;
-
   private final CustomerPort customerPort;
 
   private final ProfileImagePort profileImagePort;
@@ -26,8 +25,9 @@ public class ListActiveCustomersImpl implements ListActiveCustomers {
   public Paged<Customer> execute(final CustomerListRequest request) {
     log.debug("Listing customers for {}", request);
 
-    if (request.page().size() > MAX_PAGE_SIZE) {
-      throw new IllegalArgumentException("Page size exceeds maximum allowed: " + MAX_PAGE_SIZE);
+    if (request.page().size() > PageConstants.MAX_PAGE_SIZE) {
+      throw new IllegalArgumentException(
+          "Page size exceeds maximum allowed: " + PageConstants.MAX_PAGE_SIZE);
     }
 
     final Page requestedPage = request.page();

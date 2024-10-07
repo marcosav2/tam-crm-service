@@ -62,6 +62,7 @@ class ListActiveCustomersTest {
             });
 
     verify(customerPort).findActive(1, 10);
+    verify(customerPort).countActive();
     verify(profileImagePort).generateTempUrl(customer.profileImageUrl());
   }
 
@@ -85,6 +86,7 @@ class ListActiveCustomersTest {
             });
 
     verify(customerPort).findActive(1, 10);
+    verify(customerPort).countActive();
     verifyNoInteractions(profileImagePort);
   }
 }

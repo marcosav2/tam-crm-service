@@ -27,7 +27,7 @@ public class RegisterCustomerImpl implements RegisterCustomer {
       imageKey = profileImagePort.save(profileImage);
     }
 
-    final var customerToSave = customer.toBuilder().profileImageUrl(imageKey).build();
+    final var customerToSave = customer.toBuilder().active(true).profileImageUrl(imageKey).build();
 
     try {
       return customerPort.register(customerToSave, user);

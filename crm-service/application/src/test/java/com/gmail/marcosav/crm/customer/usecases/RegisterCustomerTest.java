@@ -37,7 +37,8 @@ class RegisterCustomerTest {
 
     final var result = registerCustomer.execute(customer, mockedIS, user);
 
-    final var savedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
+    final var savedCustomer =
+        customer.toBuilder().active(true).profileImageUrl(mockedImageKey).build();
     assertThat(result).isEqualTo(customer);
 
     verify(customerPort).register(savedCustomer, user);
@@ -58,7 +59,8 @@ class RegisterCustomerTest {
 
     assertThrows(RuntimeException.class, () -> registerCustomer.execute(customer, mockedIS, user));
 
-    final var savedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
+    final var savedCustomer =
+        customer.toBuilder().active(true).profileImageUrl(mockedImageKey).build();
 
     verify(customerPort).register(savedCustomer, user);
     verify(profileImagePort).save(mockedIS);
@@ -70,13 +72,13 @@ class RegisterCustomerTest {
     final var user = "user";
     final var customer = Customer.builder().name("name").surname("surname").build();
 
-    when(customerPort.register(customer, user)).thenReturn(customer.toBuilder().build());
+    when(customerPort.register(any(), eq(user))).thenReturn(customer.toBuilder().build());
 
     final var result = registerCustomer.execute(customer, null, user);
 
     assertThat(result).isEqualTo(customer);
 
-    verify(customerPort).register(customer, user);
+    verify(customerPort).register(customer.toBuilder().active(true).build(), user);
     verifyNoInteractions(profileImagePort);
   }
 }

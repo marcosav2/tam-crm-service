@@ -30,13 +30,15 @@ public class UpdateCustomerImpl implements UpdateCustomer {
     final String imageKey = updateProfileImage(existingCustomer, profileImage);
 
     log.debug("Updating customer {}", customer);
-    final var customerToUpdate = customer.toBuilder().profileImageUrl(imageKey).build();
+    final var customerToUpdate =
+        customer.toBuilder().active(existingCustomer.active()).profileImageUrl(imageKey).build();
 
     try {
       return customerPort.update(customerToUpdate, user);
 
     } catch (Exception e) {
       if (profileImage != null) {
+        log.error("Deleting profile image because of an unexpected error: {}", imageKey);
         profileImagePort.delete(imageKey);
       }
       throw e;
@@ -48,9 +50,12 @@ public class UpdateCustomerImpl implements UpdateCustomer {
     String imageKey = existingCustomer.profileImageUrl();
     if (profileImage != null) {
       if (imageKey != null) {
+        log.debug("Deleting existing profile image: {}", imageKey);
         profileImagePort.delete(imageKey);
       }
+      log.trace("Saving new profile image");
       imageKey = profileImagePort.save(profileImage);
+      log.debug("New profile image saved with key: {}", imageKey);
     }
     return imageKey;
   }
