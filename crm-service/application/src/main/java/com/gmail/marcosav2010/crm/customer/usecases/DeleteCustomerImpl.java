@@ -16,15 +16,14 @@ public class DeleteCustomerImpl implements DeleteCustomer {
   private final CustomerPort customerPort;
 
   @Override
-  public void execute(UUID id, String user) {
+  public void execute(final UUID id, final String user) {
     log.debug("Getting customer details for id: {}", id);
-    final Customer customer = customerPort.findById(id);
+    final Customer customer =
+        customerPort
+            .findById(id)
+            .orElseThrow(() -> new CustomerNotFound("Customer not found for id: " + id));
 
-    if (customer == null) {
-      throw new CustomerNotFound("Customer not found for id: " + id);
-    }
-
-    log.debug("Deleting (deactivating) customer: {}", id);
+    log.debug("Deleting (deactivating) customer {}", id);
     final var deletedCustomer = customer.toBuilder().active(false).build();
     customerPort.update(deletedCustomer, user);
   }

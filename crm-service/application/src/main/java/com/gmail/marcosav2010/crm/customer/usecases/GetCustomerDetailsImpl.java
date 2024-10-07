@@ -19,13 +19,12 @@ public class GetCustomerDetailsImpl implements GetCustomerDetails {
   private final ProfileImagePort profileImagePort;
 
   @Override
-  public Customer execute(UUID id) {
+  public Customer execute(final UUID id) {
     log.debug("Getting customer details for id: {}", id);
-    final Customer customer = customerPort.findById(id);
-
-    if (customer == null) {
-      throw new CustomerNotFound("Customer not found for id: " + id);
-    }
+    final Customer customer =
+        customerPort
+            .findById(id)
+            .orElseThrow(() -> new CustomerNotFound("Customer not found for id: " + id));
 
     final var currentImageKey = customer.profileImageUrl();
     if (currentImageKey == null) {

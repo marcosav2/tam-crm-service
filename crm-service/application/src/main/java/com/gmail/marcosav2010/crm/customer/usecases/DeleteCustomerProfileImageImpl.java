@@ -19,13 +19,12 @@ public class DeleteCustomerProfileImageImpl implements DeleteCustomerProfileImag
   private final ProfileImagePort profileImagePort;
 
   @Override
-  public void execute(UUID id, String user) {
+  public void execute(final UUID id, final String user) {
     log.debug("Getting customer details for id: {}", id);
-    final Customer customer = customerPort.findById(id);
-
-    if (customer == null) {
-      throw new CustomerNotFound("Customer not found for id: " + id);
-    }
+    final Customer customer =
+        customerPort
+            .findById(id)
+            .orElseThrow(() -> new CustomerNotFound("Customer not found for id: " + id));
 
     final var currentImageKey = customer.profileImageUrl();
     if (currentImageKey == null) {
