@@ -1,0 +1,7 @@
+aws:
+  region: ${AWS_REGION:eu-west-1}
+  s3:
+    bucket: ${AWS_BUCKET:crm}
+    access-key: ${AWS_ACCESS_KEY:secret}
+    secret-key: ${AWS_SECRET_KEY:secret}
+    endpoint: ${AWS_ENDPOINT:http://127.0.0.1:4566}

@@ -5,3 +5,11 @@ spring:
       max-request-size: 20MB
 
 server.tomcat.max-swallow-size: -1
+
+aws:
+  region: ${AWS_REGION}
+  s3:
+    bucket: ${AWS_BUCKET}
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+    endpoint: ${AWS_ENDPOINT}

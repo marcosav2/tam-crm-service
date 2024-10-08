@@ -38,6 +38,11 @@
             <artifactId>crm-service-infrastructure-user-repository-psql</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>crm-service-infrastructure-s3-file-manager</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
