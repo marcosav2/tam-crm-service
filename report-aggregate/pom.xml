@@ -28,6 +28,16 @@
             <artifactId>crm-service-controller</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>crm-service-infrastructure-customer-repository-psql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>crm-service-infrastructure-user-repository-psql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

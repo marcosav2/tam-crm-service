@@ -47,7 +47,7 @@ class ListActiveUsersTest {
     final var request =
         UserListRequest.builder().page(Page.builder().page(1).size(10).build()).build();
 
-    when(userPort.findActive(1, 10)).thenReturn(List.of(user));
+    when(userPort.findActive(0, 10)).thenReturn(List.of(user));
     when(userPort.countActive()).thenReturn(1L);
 
     final var results = listActiveUsers.execute(request);
@@ -59,7 +59,7 @@ class ListActiveUsersTest {
               assertThat(r.data()).containsExactly(user);
             });
 
-    verify(userPort).findActive(1, 10);
+    verify(userPort).findActive(0, 10);
     verify(userPort).countActive();
   }
 }

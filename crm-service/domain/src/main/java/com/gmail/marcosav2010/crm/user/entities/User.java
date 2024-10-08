@@ -5,7 +5,8 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record User(UUID id, String username, String name, String surname, boolean active) {
+public record User(
+    UUID id, String password, String username, String name, String surname, boolean active) {
 
   public static class UserBuilder {
 

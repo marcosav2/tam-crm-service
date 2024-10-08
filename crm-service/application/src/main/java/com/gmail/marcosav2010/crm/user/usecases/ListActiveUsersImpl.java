@@ -28,7 +28,7 @@ public class ListActiveUsersImpl implements ListActiveUsers {
     }
 
     final Page requestedPage = request.page();
-    final List<User> users = userPort.findActive(requestedPage.page(), requestedPage.size());
+    final List<User> users = userPort.findActive(requestedPage.page() - 1, requestedPage.size());
 
     final long results = userPort.countActive();
 

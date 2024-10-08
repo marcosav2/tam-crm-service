@@ -50,7 +50,7 @@ class ListActiveCustomersTest {
             .profileImageUrl("img")
             .build();
 
-    when(customerPort.findActive(1, 10)).thenReturn(List.of(customer));
+    when(customerPort.findActive(0, 10)).thenReturn(List.of(customer));
     when(customerPort.countActive()).thenReturn(1L);
 
     final var mockedTempUrl = "tempUrl";
@@ -66,7 +66,7 @@ class ListActiveCustomersTest {
                   .containsExactly(customer.toBuilder().profileImageUrl(mockedTempUrl).build());
             });
 
-    verify(customerPort).findActive(1, 10);
+    verify(customerPort).findActive(0, 10);
     verify(customerPort).countActive();
     verify(profileImagePort).generateTempUrl(customer.profileImageUrl());
   }
@@ -84,7 +84,7 @@ class ListActiveCustomersTest {
             .profileImageUrl(null)
             .build();
 
-    when(customerPort.findActive(1, 10)).thenReturn(List.of(customer));
+    when(customerPort.findActive(0, 10)).thenReturn(List.of(customer));
     when(customerPort.countActive()).thenReturn(1L);
 
     final var results = listActiveCustomers.execute(request);
@@ -96,7 +96,7 @@ class ListActiveCustomersTest {
               assertThat(r.data()).containsExactly(customer);
             });
 
-    verify(customerPort).findActive(1, 10);
+    verify(customerPort).findActive(0, 10);
     verify(customerPort).countActive();
     verifyNoInteractions(profileImagePort);
   }

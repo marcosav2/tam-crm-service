@@ -13,6 +13,11 @@
     <artifactId>crm-service-infrastructure</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>customer-repository-psql</module>
+        <module>user-repository-psql</module>
+    </modules>
+
     <dependencies>
         <!--- Modules -->
         <dependency>

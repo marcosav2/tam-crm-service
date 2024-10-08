@@ -32,7 +32,7 @@ public class ListActiveCustomersImpl implements ListActiveCustomers {
 
     final Page requestedPage = request.page();
     final List<Customer> customers =
-        customerPort.findActive(requestedPage.page(), requestedPage.size()).stream()
+        customerPort.findActive(requestedPage.page() - 1, requestedPage.size()).stream()
             .map(c -> c.toBuilder().profileImageUrl(generateCustomerImageUrl(c)).build())
             .toList();
 
