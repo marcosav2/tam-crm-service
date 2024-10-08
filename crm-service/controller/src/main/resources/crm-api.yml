@@ -308,6 +308,7 @@ paths:
               type: object
               required:
                 - username
+                - password
                 - name
                 - surname
                 - role
@@ -316,6 +317,8 @@ paths:
                   type: string
                   minLength: 5
                   maxLength: 16
+                password:
+                  type: string
                 name:
                   type: string
                   minLength: 2
@@ -395,10 +398,13 @@ paths:
             schema:
               type: object
               required:
+                - password
                 - name
                 - surname
                 - role
               properties:
+                password:
+                  type: string
                 name:
                   type: string
                   minLength: 2
@@ -517,7 +523,7 @@ components:
           type: string
         surname:
           type: string
-        profilePhotoUrl:
+        profileImageUrl:
           type: string
 
     Customer:
@@ -536,7 +542,7 @@ components:
           type: string
         surname:
           type: string
-        profilePhotoUrl:
+        profileImageUrl:
           type: string
         createdAt:
           type: string

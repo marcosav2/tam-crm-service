@@ -1,6 +1,7 @@
 package com.gmail.marcosav2010.crm.user.mapper;
 
 import com.gmail.marcosav2010.crm.user.entities.User;
+import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class UserRowMapper implements RowMapper<User> {
         .name(rs.getString("name"))
         .surname(rs.getString("surname"))
         .active(rs.getBoolean("active"))
+        .role(UserRole.valueOf(rs.getString("role")))
         .build();
   }
 
@@ -30,7 +32,8 @@ public class UserRowMapper implements RowMapper<User> {
         .addValue("username", user.username())
         .addValue("password", user.password())
         .addValue("surname", user.surname())
-        .addValue("active", user.active());
+        .addValue("active", user.active())
+        .addValue("role", user.role().name());
   }
 
   public MapSqlParameterSource mapId(final UUID id) {

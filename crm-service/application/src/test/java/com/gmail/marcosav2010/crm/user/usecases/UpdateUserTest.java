@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.gmail.marcosav2010.crm.user.entities.User;
+import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
 import com.gmail.marcosav2010.crm.user.usecases.UpdateUserImpl;
@@ -44,9 +45,16 @@ class UpdateUserTest {
             .username("aaa1234454")
             .name("name2")
             .surname("surname2")
+            .role(UserRole.USER)
             .build();
     final var existingUser =
-        user.toBuilder().username("aaa1234").name("name").surname("surname").active(true).build();
+        user.toBuilder()
+            .username("aaa1234")
+            .name("name")
+            .surname("surname")
+            .active(true)
+            .role(UserRole.ADMIN)
+            .build();
 
     when(userPort.findById(user.id())).thenReturn(Optional.of(existingUser));
     when(userPort.update(any())).thenReturn(user);

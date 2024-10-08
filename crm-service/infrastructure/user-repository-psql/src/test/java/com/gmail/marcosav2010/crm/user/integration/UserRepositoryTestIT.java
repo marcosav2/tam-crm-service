@@ -3,6 +3,7 @@ package com.gmail.marcosav2010.crm.user.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gmail.marcosav2010.crm.user.entities.User;
+import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import com.gmail.marcosav2010.crm.user.mapper.UserRowMapper;
 import com.gmail.marcosav2010.crm.user.repository.UserRepository;
 import java.util.Map;
@@ -63,6 +64,7 @@ class UserRepositoryTestIT {
             .name("name")
             .surname("surname")
             .active(true)
+            .role(UserRole.USER)
             .build();
 
     userRepository.insert(user);
@@ -82,6 +84,7 @@ class UserRepositoryTestIT {
             .name("name")
             .surname("surname")
             .active(true)
+            .role(UserRole.USER)
             .build();
 
     userRepository.insert(user);
@@ -93,6 +96,7 @@ class UserRepositoryTestIT {
             .name("newName")
             .surname("surname2")
             .active(false)
+            .role(UserRole.USER)
             .build();
 
     userRepository.update(updated);
@@ -116,6 +120,7 @@ class UserRepositoryTestIT {
             .name("name")
             .surname("surname")
             .active(true)
+            .role(UserRole.ADMIN)
             .build();
 
     userRepository.insert(user);
@@ -134,6 +139,7 @@ class UserRepositoryTestIT {
             .name("name")
             .surname("surname")
             .active(true)
+            .role(UserRole.USER)
             .build();
 
     userRepository.insert(user);
@@ -152,6 +158,7 @@ class UserRepositoryTestIT {
             .name("name")
             .surname("surname")
             .active(true)
+            .role(UserRole.USER)
             .build();
 
     userRepository.insert(user);

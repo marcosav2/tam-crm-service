@@ -6,7 +6,13 @@ import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record User(
-    UUID id, String password, String username, String name, String surname, boolean active) {
+    UUID id,
+    String password,
+    String username,
+    String name,
+    String surname,
+    boolean active,
+    UserRole role) {
 
   public static class UserBuilder {
 
@@ -28,6 +34,12 @@ public record User(
       Validate.length("surname", surname, 2, 30);
       Validate.alphanumericPlus("surname", surname);
       this.surname = surname;
+      return this;
+    }
+
+    public UserBuilder role(UserRole role) {
+      Validate.notNull("role", role);
+      this.role = role;
       return this;
     }
   }

@@ -10,6 +10,12 @@ public class Validate {
 
   private static final Pattern ALPHANUMERIC_PLUS_PATTERN = Pattern.compile("[a-zA-Z0-9\\-_.]+");
 
+  public static void notNull(final String field, final Object value) {
+    if (value == null) {
+      throw new DomainValidationException(String.format("Field %s cannot be null", field));
+    }
+  }
+
   public static void length(final String field, final String value, final int min, final int max) {
     if (value == null || value.length() < min || value.length() > max) {
       throw new DomainValidationException(

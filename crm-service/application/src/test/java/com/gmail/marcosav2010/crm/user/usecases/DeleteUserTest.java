@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.gmail.marcosav2010.crm.user.entities.User;
+import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
-import com.gmail.marcosav2010.crm.user.usecases.DeleteUserImpl;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -42,6 +42,7 @@ class DeleteUserTest {
             .name("name")
             .surname("surname")
             .active(true)
+            .role(UserRole.USER)
             .build();
 
     when(userPort.findById(user.id())).thenReturn(Optional.of(user));

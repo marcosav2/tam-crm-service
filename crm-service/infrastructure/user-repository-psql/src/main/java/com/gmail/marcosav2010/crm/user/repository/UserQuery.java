@@ -14,14 +14,16 @@ public enum UserQuery {
               password,
               name,
               surname,
-              active
+              active,
+              role
             ) VALUES (
               :id,
               :username,
               :password,
               :name,
               :surname,
-              :active
+              :active,
+              :role
              )
           """),
   QUERY_UPDATE_USER(
@@ -30,7 +32,8 @@ public enum UserQuery {
               password = :password,
               name = :name,
               surname = :surname,
-              active = :active
+              active = :active,
+              role = :role
             WHERE id = :id
           """),
   QUERY_FIND_USER_BY_ID(
@@ -41,7 +44,8 @@ public enum UserQuery {
               password,
               name,
               surname,
-              active
+              active,
+              role
             FROM users
             WHERE id = :id
           """),
@@ -53,7 +57,8 @@ public enum UserQuery {
               password,
               name,
               surname,
-              active
+              active,
+              role
             FROM users
             WHERE username = :username
           """),
@@ -65,7 +70,8 @@ public enum UserQuery {
               password,
               name,
               surname,
-              active
+              active,
+              role
             FROM users
             WHERE active = :active
             LIMIT :limit

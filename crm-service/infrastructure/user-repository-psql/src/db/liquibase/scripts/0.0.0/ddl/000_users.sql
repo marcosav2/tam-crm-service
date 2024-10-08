@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users
     password VARCHAR(255),
     name     VARCHAR(50)  NOT NULL,
     surname  VARCHAR(50)  NOT NULL,
-    active   BOOLEAN      NOT NULL
+    active   BOOLEAN      NOT NULL,
+    role     VARCHAR(16)  NOT NULL
 );
 
 --rollback DROP TABLE IF EXISTS users;

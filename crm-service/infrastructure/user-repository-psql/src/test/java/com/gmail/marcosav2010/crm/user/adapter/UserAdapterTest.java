@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gmail.marcosav2010.crm.user.entities.User;
+import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import com.gmail.marcosav2010.crm.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ class UserAdapterTest {
             .username("uuuuu")
             .name("name")
             .surname("surname")
+            .role(UserRole.USER)
             .build();
 
     when(this.repository.findById(user.id())).thenReturn(Optional.of(user));
@@ -59,6 +61,7 @@ class UserAdapterTest {
             .username("uuuuu")
             .name("name")
             .surname("surname")
+            .role(UserRole.USER)
             .build();
 
     when(this.repository.findByUsername(user.username())).thenReturn(Optional.of(user));
@@ -79,12 +82,14 @@ class UserAdapterTest {
                 .id(UUID.randomUUID())
                 .name("name")
                 .surname("surname")
+                .role(UserRole.USER)
                 .build(),
             User.builder()
                 .username("uuuuu")
                 .id(UUID.randomUUID())
                 .name("name")
                 .surname("surname")
+                .role(UserRole.ADMIN)
                 .build());
 
     when(this.repository.findByActiveWithLimitAndOffset(true, 10, 0)).thenReturn(users);
@@ -115,6 +120,7 @@ class UserAdapterTest {
             .id(UUID.randomUUID())
             .name("name")
             .surname("surname")
+            .role(UserRole.ADMIN)
             .build();
 
     final var updated = this.adapter.update(user);
@@ -126,7 +132,14 @@ class UserAdapterTest {
 
   @Test
   void register() {
-    final User user = User.builder().username("uuuuu").name("name").surname("surname").build();
+    final User user =
+        User.builder()
+            .username("uuuuu")
+            .name("name")
+            .surname("surname")
+            .role(UserRole.USER)
+            .active(true)
+            .build();
 
     final var registered = this.adapter.register(user);
 

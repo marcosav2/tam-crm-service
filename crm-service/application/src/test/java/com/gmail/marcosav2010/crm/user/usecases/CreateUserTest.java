@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gmail.marcosav2010.crm.user.entities.User;
+import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import com.gmail.marcosav2010.crm.user.exception.UsernameAlreadyUsed;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
 import com.gmail.marcosav2010.crm.user.usecases.CreateUserImpl;
@@ -26,7 +27,13 @@ class CreateUserTest {
 
   @Test
   void execute_success_createUser() {
-    final var user = User.builder().username("aaa1234").name("name").surname("email").build();
+    final var user =
+        User.builder()
+            .username("aaa1234")
+            .name("name")
+            .surname("email")
+            .role(UserRole.USER)
+            .build();
 
     when(userPort.findByUsername(any())).thenReturn(Optional.empty());
     when(userPort.register(any())).thenReturn(user);
@@ -40,7 +47,13 @@ class CreateUserTest {
 
   @Test
   void execute_alreadyUsed_createUser() {
-    final var user = User.builder().username("aaa1234").name("name").surname("email").build();
+    final var user =
+        User.builder()
+            .username("aaa1234")
+            .name("name")
+            .surname("email")
+            .role(UserRole.USER)
+            .build();
 
     when(userPort.findByUsername(any())).thenReturn(Optional.of(User.builder().build()));
 
