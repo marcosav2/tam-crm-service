@@ -21,6 +21,7 @@ public class DeleteCustomerImpl implements DeleteCustomer {
     final Customer customer =
         customerPort
             .findById(id)
+            .filter(Customer::active)
             .orElseThrow(() -> new CustomerNotFound("Customer not found for id: " + id));
 
     log.debug("Deleting (deactivating) customer {}", id);

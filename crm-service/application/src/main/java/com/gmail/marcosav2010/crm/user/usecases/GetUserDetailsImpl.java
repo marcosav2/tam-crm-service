@@ -18,8 +18,14 @@ public class GetUserDetailsImpl implements GetUserDetails {
   @Override
   public User execute(final UUID id) {
     log.debug("Getting user details for id: {}", id);
-    return userPort
-        .findById(id)
-        .orElseThrow(() -> new UserNotFound("User not found for id: " + id));
+    final var user =
+        userPort.findById(id).orElseThrow(() -> new UserNotFound("User not found for id: " + id));
+
+    if (!user.active()) {
+      log.debug("User {} is not active", id);
+      throw new UserNotFound("User not found for id: " + id);
+    }
+
+    return user;
   }
 }

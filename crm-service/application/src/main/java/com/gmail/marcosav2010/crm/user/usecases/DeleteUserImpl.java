@@ -1,5 +1,6 @@
 package com.gmail.marcosav2010.crm.user.usecases;
 
+import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.user.entities.User;
 import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
@@ -19,7 +20,10 @@ public class DeleteUserImpl implements DeleteUser {
   public void execute(final UUID id) {
     log.debug("Getting user details for id: {}", id);
     final User existingUser =
-        userPort.findById(id).orElseThrow(() -> new UserNotFound("User not found for id: " + id));
+        userPort
+            .findById(id)
+            .filter(User::active)
+            .orElseThrow(() -> new UserNotFound("User not found for id: " + id));
 
     log.debug("Deleting (deactivating) user {}", id);
 

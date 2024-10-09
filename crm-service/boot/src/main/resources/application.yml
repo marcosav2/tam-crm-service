@@ -1,4 +1,10 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:crm}${DB_PARAMS:}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:db-user}
+    password: ${DB_PASSWORD:db-password}
+    type: com.zaxxer.hikari.HikariDataSource
   servlet:
     multipart:
       max-file-size: 15MB
@@ -13,3 +19,7 @@ aws:
     access-key: ${AWS_ACCESS_KEY}
     secret-key: ${AWS_SECRET_KEY}
     endpoint: ${AWS_ENDPOINT}
+
+logging:
+  level:
+    com.gmail.marcosav2010.crm: ${LOG_LEVEL:INFO}

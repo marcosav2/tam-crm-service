@@ -37,11 +37,37 @@ class GetCustomerDetailsTest {
   }
 
   @Test
+  void execute_existingDeactivated_throwNotFound() {
+    final UUID id = UUID.randomUUID();
+    final var customer =
+        Customer.builder()
+            .id(id)
+            .name("name")
+            .surname("surname")
+            .active(false)
+            .profileImageUrl(null)
+            .build();
+
+    when(customerPort.findById(id)).thenReturn(Optional.of(customer));
+
+    assertThrows(CustomerNotFound.class, () -> getCustomerDetails.execute(id));
+
+    verify(customerPort).findById(id);
+    verifyNoInteractions(profileImagePort);
+  }
+
+  @Test
   void execute_existingWithPhoto_generatePhotoAndReturn() {
     final UUID id = UUID.randomUUID();
 
     final var customer =
-        Customer.builder().id(id).name("name").surname("surname").profileImageUrl("img").build();
+        Customer.builder()
+            .id(id)
+            .name("name")
+            .surname("surname")
+            .active(true)
+            .profileImageUrl("img")
+            .build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 
@@ -61,7 +87,13 @@ class GetCustomerDetailsTest {
     final UUID id = UUID.randomUUID();
 
     final var customer =
-        Customer.builder().id(id).name("name").surname("surname").profileImageUrl(null).build();
+        Customer.builder()
+            .id(id)
+            .name("name")
+            .surname("surname")
+            .active(true)
+            .profileImageUrl(null)
+            .build();
 
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 

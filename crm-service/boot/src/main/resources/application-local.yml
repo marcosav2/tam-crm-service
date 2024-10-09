@@ -4,4 +4,8 @@ aws:
     bucket: ${AWS_BUCKET:crm}
     access-key: ${AWS_ACCESS_KEY:secret}
     secret-key: ${AWS_SECRET_KEY:secret}
-    endpoint: ${AWS_ENDPOINT:http://127.0.0.1:4566}
+    endpoint: ${AWS_ENDPOINT:https://localhost.localstack.cloud:4566}
+
+logging:
+  level:
+    com.gmail.marcosav2010.crm: ${LOG_LEVEL:DEBUG}

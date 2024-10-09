@@ -38,6 +38,6 @@ public class S3Config {
 
   @Bean
   public FileManagerAdapter createFileManagerPort(final S3Client s3Client) {
-    return new FileManagerAdapter(s3Client, bucketName);
+    return new FileManagerAdapter(s3Client, bucketName, URI.create(endpoint));
   }
 }

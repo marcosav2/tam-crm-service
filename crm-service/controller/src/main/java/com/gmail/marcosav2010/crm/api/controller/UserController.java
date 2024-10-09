@@ -10,6 +10,7 @@ import com.gmail.marcosav2010.crm.user.entities.UserListRequest;
 import com.gmail.marcosav2010.crm.user.usecases.*;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,13 +28,14 @@ public class UserController implements UserApi {
 
   @Override
   public ResponseEntity<UserDTO> createUser(CreateUserRequestDTO createUserRequestDTO) {
-    return ResponseEntity.ok(mapper.map(createUser.execute(mapper.map(createUserRequestDTO))));
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(mapper.map(createUser.execute(mapper.map(createUserRequestDTO))));
   }
 
   @Override
   public ResponseEntity<Void> deleteUser(UUID id) {
     deleteUser.execute(id);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 
   @Override

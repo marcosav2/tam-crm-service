@@ -2,6 +2,7 @@ package com.gmail.marcosav2010.crm.customer.adapter;
 
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.UUID;
@@ -9,9 +10,8 @@ import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -20,20 +20,27 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 @RequiredArgsConstructor
 public class FileManagerAdapter implements ProfileImagePort {
 
+  private static final Duration TEMP_URL_DURATION = Duration.ofSeconds(2 * 60 * 60L);
+
   private static final String BASE_PATH = "profile-images";
 
   private final S3Client s3Client;
 
   private final String bucketName;
 
+  private final URI endpointOverride;
+
   @Override
   public String save(final InputStream stream) {
     final var name = UUID.randomUUID().toString();
-    final var key = String.format("%s/%s", BASE_PATH, name);
+    final var key = String.format("%s/%s/%s", bucketName, BASE_PATH, name);
     final PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(key).build();
+    log.debug("Saving object {} in bucket {}", key, bucketName);
 
     try {
       final ByteBuffer byteBuffer = ByteBuffer.wrap(stream.readAllBytes());
+      log.debug("Uploading {} bytes", byteBuffer.capacity());
+
       s3Client.putObject(request, RequestBody.fromByteBuffer(byteBuffer));
 
       return key;
@@ -44,14 +51,18 @@ public class FileManagerAdapter implements ProfileImagePort {
 
   @Override
   public String generateTempUrl(final String key) {
-    try (final S3Presigner presigner = S3Presigner.create()) {
-
+    try (final S3Presigner presigner =
+        S3Presigner.builder()
+            .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+            .endpointOverride(endpointOverride)
+            .build()) {
+      log.debug("Generating temporary URL for object {}", key);
       final GetObjectRequest objectRequest =
           GetObjectRequest.builder().bucket(bucketName).key(key).build();
 
       final GetObjectPresignRequest presignRequest =
           GetObjectPresignRequest.builder()
-              .signatureDuration(Duration.ofMinutes(10))
+              .signatureDuration(TEMP_URL_DURATION)
               .getObjectRequest(objectRequest)
               .build();
 
@@ -64,6 +75,7 @@ public class FileManagerAdapter implements ProfileImagePort {
   @Override
   public void delete(final String key) {
     try {
+      log.debug("Deleting object {}", key);
       final DeleteObjectRequest deleteObjectRequest =
           DeleteObjectRequest.builder().bucket(this.bucketName).key(key).build();
 

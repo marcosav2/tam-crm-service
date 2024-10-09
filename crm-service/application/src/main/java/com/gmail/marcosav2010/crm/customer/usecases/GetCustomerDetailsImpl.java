@@ -26,6 +26,11 @@ public class GetCustomerDetailsImpl implements GetCustomerDetails {
             .findById(id)
             .orElseThrow(() -> new CustomerNotFound("Customer not found for id: " + id));
 
+    if (!customer.active()) {
+      log.debug("Customer {} is not active", id);
+      throw new CustomerNotFound("Customer not found for id: " + id);
+    }
+
     final var currentImageKey = customer.profileImageUrl();
     if (currentImageKey == null) {
       return customer;

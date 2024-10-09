@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.user.entities.User;
 import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
-import com.gmail.marcosav2010.crm.user.usecases.GetUserDetailsImpl;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -34,6 +33,25 @@ class GetUserDetailsTest {
   }
 
   @Test
+  void execute_existingDeactivated_throwNotFound() {
+    final UUID id = UUID.randomUUID();
+    final var customer =
+        User.builder()
+            .id(UUID.randomUUID())
+            .username("aaa1234454")
+            .name("name2")
+            .surname("surname2")
+            .active(false)
+            .build();
+
+    when(userPort.findById(id)).thenReturn(Optional.of(customer));
+
+    assertThrows(UserNotFound.class, () -> getUserDetails.execute(id));
+
+    verify(userPort).findById(id);
+  }
+
+  @Test
   void execute_success_getUser() {
     final var id = UUID.randomUUID();
     final var user =
@@ -42,6 +60,7 @@ class GetUserDetailsTest {
             .username("aaa1234454")
             .name("name2")
             .surname("surname2")
+            .active(true)
             .build();
 
     when(userPort.findById(id)).thenReturn(Optional.of(user));

@@ -12,6 +12,7 @@ import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -31,6 +32,20 @@ public class ControllerExceptionHandler {
   public ResponseEntity<ErrorResponseDTO> domainValidationException(
       final RuntimeException exception) {
     return build(exception, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler({InvalidImageTypeException.class})
+  public ResponseEntity<ErrorResponseDTO> invalidFileFormatException(
+      final InvalidImageTypeException exception) {
+    return build(exception, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+  }
+
+  @ExceptionHandler({MaxUploadSizeExceededException.class})
+  public ResponseEntity<ErrorResponseDTO> maxUploadSizeExceeded(
+      final MaxUploadSizeExceededException exception) {
+    String message = "File size exceeds the maximum allowed size of 15MB";
+
+    return build(exception, HttpStatus.PAYLOAD_TOO_LARGE, message);
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)

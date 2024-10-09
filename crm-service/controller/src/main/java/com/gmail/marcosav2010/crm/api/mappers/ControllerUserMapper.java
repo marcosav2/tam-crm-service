@@ -8,12 +8,14 @@ import com.gmail.marcosav2010.crm.shared.entities.Paged;
 import com.gmail.marcosav2010.crm.user.entities.User;
 import java.util.UUID;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ControllerUserMapper {
 
   UserDTO map(User user);
 
+  @Mapping(target = "username", ignore = true)
   User map(CreateUserRequestDTO dto);
 
   User map(UUID id, UpdateUserRequestDTO updateUserRequestDTO);

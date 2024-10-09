@@ -1,0 +1,51 @@
+name: crm-service
+
+services:
+  postgres:
+    image: postgres:16.4
+    restart: always
+    environment:
+      POSTGRES_USER: db-user
+      POSTGRES_PASSWORD: db-password
+      POSTGRES_DB: crm
+    ports:
+      - "5432:5432"
+
+  liquibase:
+    image: liquibase/liquibase:4.29
+    depends_on:
+      - postgres
+    volumes:
+      - ./db/config/:/liquibase/changelog
+      - ./crm-service/:/liquibase/changelog/crm-service
+    command: --searchPath=/liquibase/changelog --changeLogFile=changelog.xml --url=jdbc:postgresql://postgres:5432/crm --username=db-user --password=db-password update
+
+  localstack:
+    image: localstack/localstack:3.8.1
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      SERVICES: s3:4566
+      DEBUG: 1
+      HOSTNAME: localstack
+      HOSTNAME_EXTERNAL: localstack
+      PERSISTENCE: 1
+      LS_LOG: trace
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.localstack:/var/lib/localstack
+
+  aws-cli:
+    image: amazon/aws-cli
+    depends_on:
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: secret
+      AWS_SECRET_ACCESS_KEY: secret
+      AWS_DEFAULT_REGION: eu-west-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://crm --region=eu-west-1
+      "

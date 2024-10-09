@@ -22,10 +22,16 @@ public class UpdateUserImpl implements UpdateUser {
             .findById(user.id())
             .orElseThrow(() -> new UserNotFound("User not found for id: " + user.id()));
 
-    log.debug("Updating user {}", user);
-
     final var userToUpdate =
-        user.toBuilder().username(existingUser.username()).active(existingUser.active()).build();
+        existingUser.toBuilder()
+            .name(user.name())
+            .surname(user.surname())
+            .role(user.role())
+            .password(user.password())
+            .build();
+
+    log.debug("Updating user {}", userToUpdate);
+
     return userPort.update(userToUpdate);
   }
 }
