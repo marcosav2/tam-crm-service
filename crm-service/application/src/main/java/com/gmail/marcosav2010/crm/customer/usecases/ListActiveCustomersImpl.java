@@ -3,7 +3,7 @@ package com.gmail.marcosav2010.crm.customer.usecases;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.entities.CustomerListRequest;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.constants.PageConstants;
 import com.gmail.marcosav2010.crm.shared.entities.Page;
 import com.gmail.marcosav2010.crm.shared.entities.Paged;
@@ -19,7 +19,7 @@ public class ListActiveCustomersImpl implements ListActiveCustomers {
 
   private final CustomerPort customerPort;
 
-  private final ProfileImagePort profileImagePort;
+  private final ProfileImageURLProviderPort profileImageURLProviderPort;
 
   @Override
   public Paged<Customer> execute(final CustomerListRequest request) {
@@ -48,6 +48,6 @@ public class ListActiveCustomersImpl implements ListActiveCustomers {
     }
 
     log.debug("Generating temp url for image: {}", currentImageKey);
-    return profileImagePort.generateTempUrl(currentImageKey);
+    return profileImageURLProviderPort.generateURL(currentImageKey);
   }
 }

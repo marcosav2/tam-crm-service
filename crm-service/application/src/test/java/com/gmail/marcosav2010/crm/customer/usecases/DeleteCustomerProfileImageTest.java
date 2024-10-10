@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class DeleteCustomerProfileImageTest {
 
   @Mock private CustomerPort customerPort;
 
-  @Mock private ProfileImagePort profileImagePort;
+  @Mock private ProfileImageStoragePort profileImageStoragePort;
 
   @InjectMocks private DeleteCustomerProfileImageImpl deleteCustomerProfileImage;
 
@@ -33,7 +33,7 @@ class DeleteCustomerProfileImageTest {
 
     verify(customerPort).findById(id);
     verifyNoMoreInteractions(customerPort);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageStoragePort);
   }
 
   @Test
@@ -53,7 +53,7 @@ class DeleteCustomerProfileImageTest {
     deleteCustomerProfileImage.execute(id, "user");
 
     verify(customerPort).findById(id);
-    verify(profileImagePort).delete(oldImageKey);
+    verify(profileImageStoragePort).delete(oldImageKey);
 
     final var deletedCustomer = customer.toBuilder().profileImageUrl(null).build();
     verify(customerPort).update(deletedCustomer, "user");
@@ -71,6 +71,6 @@ class DeleteCustomerProfileImageTest {
 
     verify(customerPort).findById(id);
     verifyNoMoreInteractions(customerPort);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageStoragePort);
   }
 }

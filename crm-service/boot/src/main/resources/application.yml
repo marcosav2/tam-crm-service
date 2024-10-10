@@ -18,7 +18,11 @@ aws:
     bucket: ${AWS_BUCKET}
     access-key: ${AWS_ACCESS_KEY}
     secret-key: ${AWS_SECRET_KEY}
-    endpoint: ${AWS_ENDPOINT}
+    endpoint: ${AWS_ENDPOINT:#{null}}
+
+crm:
+  files:
+    url-lifetime: ${CRM_URL_LIFETIME:7200}
 
 logging:
   level:

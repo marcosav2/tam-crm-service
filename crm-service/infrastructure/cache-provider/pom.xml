@@ -6,25 +6,22 @@
 
     <parent>
         <groupId>com.gmail.marcosav2010</groupId>
-        <artifactId>crm-service</artifactId>
+        <artifactId>crm-service-infrastructure</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>crm-service-infrastructure</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>customer-repository-psql</module>
-        <module>user-repository-psql</module>
-        <module>s3-file-manager</module>
-        <module>cache-provider</module>
-    </modules>
+    <artifactId>crm-service-infrastructure-cache-provider</artifactId>
 
     <dependencies>
-        <!--- Modules -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>crm-service-application</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
         </dependency>
     </dependencies>
 

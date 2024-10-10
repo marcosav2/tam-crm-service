@@ -10,7 +10,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
-public class S3Config {
+public class FileManagerConfig {
 
   @Value("${aws.region}")
   private String region;
@@ -27,17 +27,26 @@ public class S3Config {
   @Value("${aws.s3.endpoint}")
   private String endpoint;
 
+  @Value("${crm.files.url-lifetime}")
+  private long urlLifetime;
+
   @Bean
   public S3Client s3Client() {
-    return S3Client.builder()
-        .region(Region.of(region))
-        .endpointOverride(URI.create(endpoint))
-        .credentialsProvider(() -> AwsBasicCredentials.create(accessKey, secretKey))
-        .build();
+    final var s3Client =
+        S3Client.builder()
+            .region(Region.of(region))
+            .credentialsProvider(() -> AwsBasicCredentials.create(accessKey, secretKey));
+
+    if (endpoint != null) {
+      s3Client.endpointOverride(URI.create(endpoint));
+    }
+
+    return s3Client.build();
   }
 
   @Bean
-  public FileManagerAdapter createFileManagerPort(final S3Client s3Client) {
-    return new FileManagerAdapter(s3Client, bucketName, URI.create(endpoint));
+  public FileManagerAdapter fileManagerPort(final S3Client s3Client) {
+    final var endpointURI = endpoint == null ? null : URI.create(endpoint);
+    return new FileManagerAdapter(s3Client, bucketName, endpointURI, urlLifetime);
   }
 }

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ class GetCustomerDetailsTest {
 
   @Mock private CustomerPort customerPort;
 
-  @Mock private ProfileImagePort profileImagePort;
+  @Mock private ProfileImageURLProviderPort profileImageURLProviderPort;
 
   @InjectMocks private GetCustomerDetailsImpl getCustomerDetails;
 
@@ -33,7 +33,7 @@ class GetCustomerDetailsTest {
     assertThrows(CustomerNotFound.class, () -> getCustomerDetails.execute(id));
 
     verify(customerPort).findById(id);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageURLProviderPort);
   }
 
   @Test
@@ -53,7 +53,7 @@ class GetCustomerDetailsTest {
     assertThrows(CustomerNotFound.class, () -> getCustomerDetails.execute(id));
 
     verify(customerPort).findById(id);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageURLProviderPort);
   }
 
   @Test
@@ -72,14 +72,15 @@ class GetCustomerDetailsTest {
     when(customerPort.findById(id)).thenReturn(Optional.of(customer));
 
     final var mockedTempUrl = "tempUrl";
-    when(profileImagePort.generateTempUrl(customer.profileImageUrl())).thenReturn(mockedTempUrl);
+    when(profileImageURLProviderPort.generateURL(customer.profileImageUrl()))
+        .thenReturn(mockedTempUrl);
 
     final var result = getCustomerDetails.execute(id);
 
     assertThat(result).isEqualTo(customer.toBuilder().profileImageUrl(mockedTempUrl).build());
 
     verify(customerPort).findById(id);
-    verify(profileImagePort).generateTempUrl(customer.profileImageUrl());
+    verify(profileImageURLProviderPort).generateURL(customer.profileImageUrl());
   }
 
   @Test
@@ -102,6 +103,6 @@ class GetCustomerDetailsTest {
     assertThat(result).isEqualTo(customer);
 
     verify(customerPort).findById(id);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageURLProviderPort);
   }
 }

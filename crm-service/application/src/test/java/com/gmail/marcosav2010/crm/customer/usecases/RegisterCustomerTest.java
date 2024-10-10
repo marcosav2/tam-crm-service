@@ -6,8 +6,8 @@ import static org.mockito.Mockito.*;
 
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
-import com.gmail.marcosav2010.crm.customer.usecases.RegisterCustomerImpl;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
+
 import java.io.InputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ class RegisterCustomerTest {
 
   @Mock private CustomerPort customerPort;
 
-  @Mock private ProfileImagePort profileImagePort;
+  @Mock private ProfileImageStoragePort profileImageStoragePort;
 
   @InjectMocks private RegisterCustomerImpl registerCustomer;
 
@@ -33,7 +33,7 @@ class RegisterCustomerTest {
     final var mockedImageKey = "img";
 
     when(customerPort.register(any(), any())).thenReturn(customer.toBuilder().build());
-    when(profileImagePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
 
     final var result = registerCustomer.execute(customer, mockedIS, user);
 
@@ -42,8 +42,8 @@ class RegisterCustomerTest {
     assertThat(result).isEqualTo(customer);
 
     verify(customerPort).register(savedCustomer, user);
-    verify(profileImagePort).save(mockedIS);
-    verifyNoMoreInteractions(profileImagePort);
+    verify(profileImageStoragePort).save(mockedIS);
+    verifyNoMoreInteractions(profileImageStoragePort);
   }
 
   @Test
@@ -55,7 +55,7 @@ class RegisterCustomerTest {
     final var mockedImageKey = "img";
 
     when(customerPort.register(any(), any())).thenThrow(new RuntimeException());
-    when(profileImagePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
 
     assertThrows(RuntimeException.class, () -> registerCustomer.execute(customer, mockedIS, user));
 
@@ -63,8 +63,8 @@ class RegisterCustomerTest {
         customer.toBuilder().active(true).profileImageUrl(mockedImageKey).build();
 
     verify(customerPort).register(savedCustomer, user);
-    verify(profileImagePort).save(mockedIS);
-    verify(profileImagePort).delete(mockedImageKey);
+    verify(profileImageStoragePort).save(mockedIS);
+    verify(profileImageStoragePort).delete(mockedImageKey);
   }
 
   @Test
@@ -79,6 +79,6 @@ class RegisterCustomerTest {
     assertThat(result).isEqualTo(customer);
 
     verify(customerPort).register(customer.toBuilder().active(true).build(), user);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageStoragePort);
   }
 }

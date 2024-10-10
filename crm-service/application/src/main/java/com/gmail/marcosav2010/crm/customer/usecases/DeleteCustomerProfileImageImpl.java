@@ -3,7 +3,7 @@ package com.gmail.marcosav2010.crm.customer.usecases;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
 import java.util.UUID;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class DeleteCustomerProfileImageImpl implements DeleteCustomerProfileImag
 
   private final CustomerPort customerPort;
 
-  private final ProfileImagePort profileImagePort;
+  private final ProfileImageStoragePort profileImageStoragePort;
 
   @Override
   public void execute(final UUID id, final String user) {
@@ -33,7 +33,7 @@ public class DeleteCustomerProfileImageImpl implements DeleteCustomerProfileImag
     }
 
     log.debug("Deleting image {} for user {}", currentImageKey, id);
-    profileImagePort.delete(currentImageKey);
+    profileImageStoragePort.delete(currentImageKey);
 
     final var updatedCustomer = customer.toBuilder().profileImageUrl(null).build();
     customerPort.update(updatedCustomer, user);

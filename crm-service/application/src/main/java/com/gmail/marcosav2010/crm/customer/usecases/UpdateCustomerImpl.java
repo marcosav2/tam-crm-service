@@ -3,7 +3,7 @@ package com.gmail.marcosav2010.crm.customer.usecases;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
 import java.io.InputStream;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class UpdateCustomerImpl implements UpdateCustomer {
 
   private final CustomerPort customerPort;
 
-  private final ProfileImagePort profileImagePort;
+  private final ProfileImageStoragePort profileImageStoragePort;
 
   @Override
   public Customer execute(
@@ -39,7 +39,7 @@ public class UpdateCustomerImpl implements UpdateCustomer {
     } catch (Exception e) {
       if (profileImage != null) {
         log.error("Deleting profile image because of an unexpected error: {}", imageKey);
-        profileImagePort.delete(imageKey);
+        profileImageStoragePort.delete(imageKey);
       }
       throw e;
     }
@@ -51,10 +51,10 @@ public class UpdateCustomerImpl implements UpdateCustomer {
     if (profileImage != null) {
       if (imageKey != null) {
         log.debug("Deleting existing profile image: {}", imageKey);
-        profileImagePort.delete(imageKey);
+        profileImageStoragePort.delete(imageKey);
       }
       log.trace("Saving new profile image");
-      imageKey = profileImagePort.save(profileImage);
+      imageKey = profileImageStoragePort.save(profileImage);
       log.debug("New profile image saved with key: {}", imageKey);
     }
     return imageKey;

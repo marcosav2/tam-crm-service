@@ -1,6 +1,7 @@
 package com.gmail.marcosav2010.crm.customer.adapter;
 
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -18,9 +19,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 @CustomLog
 @RequiredArgsConstructor
-public class FileManagerAdapter implements ProfileImagePort {
-
-  private static final Duration TEMP_URL_DURATION = Duration.ofSeconds(2 * 60 * 60L);
+public class FileManagerAdapter implements ProfileImageStoragePort, ProfileImageURLProviderPort {
 
   private static final String BASE_PATH = "profile-images";
 
@@ -29,6 +28,8 @@ public class FileManagerAdapter implements ProfileImagePort {
   private final String bucketName;
 
   private final URI endpointOverride;
+
+  private final long urlLifetime;
 
   @Override
   public String save(final InputStream stream) {
@@ -50,7 +51,7 @@ public class FileManagerAdapter implements ProfileImagePort {
   }
 
   @Override
-  public String generateTempUrl(final String key) {
+  public String generateURL(final String key) {
     try (final S3Presigner presigner =
         S3Presigner.builder()
             .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
@@ -62,7 +63,7 @@ public class FileManagerAdapter implements ProfileImagePort {
 
       final GetObjectPresignRequest presignRequest =
           GetObjectPresignRequest.builder()
-              .signatureDuration(TEMP_URL_DURATION)
+              .signatureDuration(Duration.ofSeconds(urlLifetime))
               .getObjectRequest(objectRequest)
               .build();
 

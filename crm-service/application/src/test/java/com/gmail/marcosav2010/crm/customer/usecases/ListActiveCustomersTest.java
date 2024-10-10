@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.entities.CustomerListRequest;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.entities.Page;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ class ListActiveCustomersTest {
 
   @Mock private CustomerPort customerPort;
 
-  @Mock private ProfileImagePort profileImagePort;
+  @Mock private ProfileImageURLProviderPort profileImageURLProviderPort;
 
   @InjectMocks private ListActiveCustomersImpl listActiveCustomers;
 
@@ -34,7 +34,7 @@ class ListActiveCustomersTest {
     assertThrows(IllegalArgumentException.class, () -> listActiveCustomers.execute(request));
 
     verifyNoInteractions(customerPort);
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageURLProviderPort);
   }
 
   @Test
@@ -54,7 +54,8 @@ class ListActiveCustomersTest {
     when(customerPort.countActive()).thenReturn(1L);
 
     final var mockedTempUrl = "tempUrl";
-    when(profileImagePort.generateTempUrl(customer.profileImageUrl())).thenReturn(mockedTempUrl);
+    when(profileImageURLProviderPort.generateURL(customer.profileImageUrl()))
+        .thenReturn(mockedTempUrl);
 
     final var results = listActiveCustomers.execute(request);
 
@@ -68,7 +69,7 @@ class ListActiveCustomersTest {
 
     verify(customerPort).findActive(0, 10);
     verify(customerPort).countActive();
-    verify(profileImagePort).generateTempUrl(customer.profileImageUrl());
+    verify(profileImageURLProviderPort).generateURL(customer.profileImageUrl());
   }
 
   @Test
@@ -98,6 +99,6 @@ class ListActiveCustomersTest {
 
     verify(customerPort).findActive(0, 10);
     verify(customerPort).countActive();
-    verifyNoInteractions(profileImagePort);
+    verifyNoInteractions(profileImageURLProviderPort);
   }
 }

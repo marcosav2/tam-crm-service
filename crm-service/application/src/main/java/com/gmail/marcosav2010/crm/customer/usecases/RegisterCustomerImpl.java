@@ -2,7 +2,7 @@ package com.gmail.marcosav2010.crm.customer.usecases;
 
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
-import com.gmail.marcosav2010.crm.customer.ports.ProfileImagePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
 import java.io.InputStream;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class RegisterCustomerImpl implements RegisterCustomer {
 
   private final CustomerPort customerPort;
 
-  private final ProfileImagePort profileImagePort;
+  private final ProfileImageStoragePort profileImageStoragePort;
 
   @Override
   public Customer execute(
@@ -24,7 +24,7 @@ public class RegisterCustomerImpl implements RegisterCustomer {
 
     String imageKey = null;
     if (profileImage != null) {
-      imageKey = profileImagePort.save(profileImage);
+      imageKey = profileImageStoragePort.save(profileImage);
     }
 
     final var customerToSave = customer.toBuilder().active(true).profileImageUrl(imageKey).build();
@@ -34,7 +34,7 @@ public class RegisterCustomerImpl implements RegisterCustomer {
 
     } catch (Exception e) {
       if (imageKey != null) {
-        profileImagePort.delete(imageKey);
+        profileImageStoragePort.delete(imageKey);
       }
       throw e;
     }
