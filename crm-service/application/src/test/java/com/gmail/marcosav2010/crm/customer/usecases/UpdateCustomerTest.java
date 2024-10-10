@@ -8,8 +8,7 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
-
-import java.io.InputStream;
+import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -54,23 +53,23 @@ class UpdateCustomerTest {
             .profileImageUrl(previousImageKey)
             .build();
 
-    final var mockedIS = mock(InputStream.class);
+    final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "newImg";
 
     final var updatedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
 
     when(customerPort.findById(customer.id())).thenReturn(Optional.of(existingCustomer));
-    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
     when(customerPort.update(updatedCustomer, user))
         .thenReturn(updatedCustomer.toBuilder().build());
 
-    final var result = updateCustomer.execute(customer, mockedIS, user);
+    final var result = updateCustomer.execute(customer, mockedFile, user);
 
     assertThat(result).isEqualTo(updatedCustomer);
 
     verify(customerPort).update(updatedCustomer, user);
     verify(profileImageStoragePort).delete(previousImageKey);
-    verify(profileImageStoragePort).save(mockedIS);
+    verify(profileImageStoragePort).save(mockedFile);
     verifyNoMoreInteractions(profileImageStoragePort);
   }
 
@@ -82,22 +81,22 @@ class UpdateCustomerTest {
 
     final var existingCustomer = customer.toBuilder().name("name").surname("surname").build();
 
-    final var mockedIS = mock(InputStream.class);
+    final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "newImg";
 
     final var updatedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
 
     when(customerPort.findById(customer.id())).thenReturn(Optional.of(existingCustomer));
-    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
     when(customerPort.update(updatedCustomer, user))
         .thenReturn(updatedCustomer.toBuilder().build());
 
-    final var result = updateCustomer.execute(customer, mockedIS, user);
+    final var result = updateCustomer.execute(customer, mockedFile, user);
 
     assertThat(result).isEqualTo(updatedCustomer);
 
     verify(customerPort).update(updatedCustomer, user);
-    verify(profileImageStoragePort).save(mockedIS);
+    verify(profileImageStoragePort).save(mockedFile);
     verifyNoMoreInteractions(profileImageStoragePort);
   }
 
@@ -115,20 +114,20 @@ class UpdateCustomerTest {
             .profileImageUrl(previousImageKey)
             .build();
 
-    final var mockedIS = mock(InputStream.class);
+    final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "newImg";
 
     final var updatedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
 
     when(customerPort.findById(customer.id())).thenReturn(Optional.of(existingCustomer));
-    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
     when(customerPort.update(updatedCustomer, user)).thenThrow(new RuntimeException());
 
-    assertThrows(RuntimeException.class, () -> updateCustomer.execute(customer, mockedIS, user));
+    assertThrows(RuntimeException.class, () -> updateCustomer.execute(customer, mockedFile, user));
 
     verify(customerPort).update(updatedCustomer, user);
     verify(profileImageStoragePort).delete(previousImageKey);
-    verify(profileImageStoragePort).save(mockedIS);
+    verify(profileImageStoragePort).save(mockedFile);
     verify(profileImageStoragePort).delete(mockedImageKey);
     verifyNoMoreInteractions(profileImageStoragePort);
   }

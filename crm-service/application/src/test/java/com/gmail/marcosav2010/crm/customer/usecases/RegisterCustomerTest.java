@@ -7,8 +7,7 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
-
-import java.io.InputStream;
+import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,20 +28,20 @@ class RegisterCustomerTest {
     final var user = "user";
     final var customer = Customer.builder().name("name").surname("surname").build();
 
-    final var mockedIS = mock(InputStream.class);
+    final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "img";
 
     when(customerPort.register(any(), any())).thenReturn(customer.toBuilder().build());
-    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
 
-    final var result = registerCustomer.execute(customer, mockedIS, user);
+    final var result = registerCustomer.execute(customer, mockedFile, user);
 
     final var savedCustomer =
         customer.toBuilder().active(true).profileImageUrl(mockedImageKey).build();
     assertThat(result).isEqualTo(customer);
 
     verify(customerPort).register(savedCustomer, user);
-    verify(profileImageStoragePort).save(mockedIS);
+    verify(profileImageStoragePort).save(mockedFile);
     verifyNoMoreInteractions(profileImageStoragePort);
   }
 
@@ -51,19 +50,20 @@ class RegisterCustomerTest {
     final var user = "user";
     final var customer = Customer.builder().name("name").surname("surname").build();
 
-    final var mockedIS = mock(InputStream.class);
+    final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "img";
 
     when(customerPort.register(any(), any())).thenThrow(new RuntimeException());
-    when(profileImageStoragePort.save(mockedIS)).thenReturn(mockedImageKey);
+    when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
 
-    assertThrows(RuntimeException.class, () -> registerCustomer.execute(customer, mockedIS, user));
+    assertThrows(
+        RuntimeException.class, () -> registerCustomer.execute(customer, mockedFile, user));
 
     final var savedCustomer =
         customer.toBuilder().active(true).profileImageUrl(mockedImageKey).build();
 
     verify(customerPort).register(savedCustomer, user);
-    verify(profileImageStoragePort).save(mockedIS);
+    verify(profileImageStoragePort).save(mockedFile);
     verify(profileImageStoragePort).delete(mockedImageKey);
   }
 

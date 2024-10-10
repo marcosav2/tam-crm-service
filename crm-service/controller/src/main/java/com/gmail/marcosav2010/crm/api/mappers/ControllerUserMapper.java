@@ -15,9 +15,9 @@ public interface ControllerUserMapper {
 
   UserDTO map(User user);
 
-  @Mapping(target = "username", ignore = true)
   User map(CreateUserRequestDTO dto);
 
+  @Mapping(target = "username", ignore = true)
   User map(UUID id, UpdateUserRequestDTO updateUserRequestDTO);
 
   ListUsers200ResponseDTO map(Paged<User> users);

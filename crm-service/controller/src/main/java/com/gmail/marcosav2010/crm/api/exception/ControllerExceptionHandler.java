@@ -6,8 +6,11 @@ import com.gmail.marcosav2010.crm.shared.exception.DomainValidationException;
 import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.exception.UsernameAlreadyUsed;
 import jakarta.validation.ConstraintViolationException;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -51,16 +54,16 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ErrorResponseDTO> badRequestTypeMismatch(
       final MethodArgumentTypeMismatchException exception) {
-    var method = exception.getParameter().getMethod();
-    var field = (method == null) ? "" : (method.getName() + ".");
+    final var method = exception.getParameter().getMethod();
+    final var field = (method == null) ? "" : (method.getName() + ".");
 
-    var providedType =
+    final var providedType =
         (exception.getValue() == null) ? null : exception.getValue().getClass().getName();
 
-    var expectedType =
+    final var expectedType =
         (exception.getRequiredType() == null) ? null : exception.getRequiredType().getName();
 
-    String message =
+    final String message =
         String.format(
             "Invalid type for field %s%s with value %s, provided %s but %s was expected",
             field, exception.getPropertyName(), exception.getValue(), providedType, expectedType);
@@ -68,10 +71,38 @@ public class ControllerExceptionHandler {
     return build(exception, HttpStatus.BAD_REQUEST, message);
   }
 
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponseDTO> badRequestTypeMismatch(
+      final MethodArgumentNotValidException exception) {
+    final var errors =
+        exception.getBindingResult().getFieldErrors().stream()
+            .map(
+                fieldError ->
+                    String.format(
+                        "Field %s %s", fieldError.getField(), fieldError.getDefaultMessage()))
+            .collect(Collectors.joining(", "));
+
+    return build(exception, HttpStatus.BAD_REQUEST, errors);
+  }
+
   @ExceptionHandler(MissingRequestValueException.class)
   public ResponseEntity<ErrorResponseDTO> badRequestMissingValue(
       final MissingRequestValueException exception) {
     return build(exception, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ErrorResponseDTO> genericBadRequest(
+      final HttpMessageNotReadableException exception) {
+    return build(exception, HttpStatus.BAD_REQUEST, exception.getMostSpecificCause().getMessage());
+  }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<ErrorResponseDTO> genericException(final RuntimeException exception) {
+    return build(
+        exception,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        exception.getClass().getName() + " - " + exception.getMessage());
   }
 
   private ResponseEntity<ErrorResponseDTO> build(

@@ -1,7 +1,7 @@
 aws:
   region: ${AWS_REGION:eu-west-1}
   s3:
-    bucket: ${AWS_BUCKET:crm}
+    bucket: ${AWS_BUCKET:crm-bucket}
     access-key: ${AWS_ACCESS_KEY:secret}
     secret-key: ${AWS_SECRET_KEY:secret}
     endpoint: ${AWS_ENDPOINT:https://localhost.localstack.cloud:4566}

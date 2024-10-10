@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: crm
     ports:
       - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
   liquibase:
     image: liquibase/liquibase:4.29
@@ -28,6 +30,7 @@ services:
     environment:
       SERVICES: s3:4566
       DEBUG: 1
+      DOCKER_SOCK: var/run/docker.sock
       HOSTNAME: localstack
       HOSTNAME_EXTERNAL: localstack
       PERSISTENCE: 1
@@ -47,5 +50,8 @@ services:
     entrypoint: /bin/sh -c
     command: >
       "
-        aws --endpoint-url=http://localstack:4566 s3 mb s3://crm --region=eu-west-1
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://crm-bucket --region=eu-west-1
       "
+
+volumes:
+  postgres:

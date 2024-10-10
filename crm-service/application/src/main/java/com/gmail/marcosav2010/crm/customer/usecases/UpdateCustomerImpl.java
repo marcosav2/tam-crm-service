@@ -4,7 +4,7 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
-import java.io.InputStream;
+import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class UpdateCustomerImpl implements UpdateCustomer {
 
   @Override
   public Customer execute(
-      final Customer customer, final InputStream profileImage, final String user) {
+      final Customer customer, final UploadFile profileImage, final String user) {
     log.debug("Getting customer details for id: {}", customer.id());
     final Customer existingCustomer =
         customerPort
@@ -46,7 +46,7 @@ public class UpdateCustomerImpl implements UpdateCustomer {
   }
 
   private String updateProfileImage(
-      final Customer existingCustomer, final InputStream profileImage) {
+      final Customer existingCustomer, final UploadFile profileImage) {
     String imageKey = existingCustomer.profileImageUrl();
     if (profileImage != null) {
       if (imageKey != null) {

@@ -35,9 +35,9 @@ public class CustomerController implements CustomerApi {
       String name, String surname, MultipartFile profileImage) {
     Validate.imageType(profileImage);
     final var customer = Customer.builder().name(name).surname(surname).build();
-    final var inputStream = FileHelper.getInputStream(profileImage);
+    final var file = FileHelper.toDomain(profileImage);
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(mapper.mapOverview(registerCustomer.execute(customer, inputStream, "user")));
+        .body(mapper.mapOverview(registerCustomer.execute(customer, file, "user")));
   }
 
   @Override
@@ -69,8 +69,7 @@ public class CustomerController implements CustomerApi {
       UUID id, String name, String surname, MultipartFile profileImage) {
     Validate.imageType(profileImage);
     final var customer = Customer.builder().id(id).name(name).surname(surname).build();
-    final var inputStream = FileHelper.getInputStream(profileImage);
-    return ResponseEntity.ok(
-        mapper.mapOverview(updateCustomer.execute(customer, inputStream, "user")));
+    final var file = FileHelper.toDomain(profileImage);
+    return ResponseEntity.ok(mapper.mapOverview(updateCustomer.execute(customer, file, "user")));
   }
 }

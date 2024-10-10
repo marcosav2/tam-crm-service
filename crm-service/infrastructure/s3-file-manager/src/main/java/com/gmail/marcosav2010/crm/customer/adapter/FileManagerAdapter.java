@@ -2,7 +2,7 @@ package com.gmail.marcosav2010.crm.customer.adapter;
 
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
-import java.io.InputStream;
+import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -32,14 +32,16 @@ public class FileManagerAdapter implements ProfileImageStoragePort, ProfileImage
   private final long urlLifetime;
 
   @Override
-  public String save(final InputStream stream) {
+  public String save(final UploadFile uploadFile) {
+    final var originalExtension =
+        uploadFile.fileName().substring(uploadFile.fileName().lastIndexOf("."));
     final var name = UUID.randomUUID().toString();
-    final var key = String.format("%s/%s/%s", bucketName, BASE_PATH, name);
+    final var key = String.format("%s/%s/%s%s", bucketName, BASE_PATH, name, originalExtension);
     final PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(key).build();
     log.debug("Saving object {} in bucket {}", key, bucketName);
 
-    try {
-      final ByteBuffer byteBuffer = ByteBuffer.wrap(stream.readAllBytes());
+    try (final var inputStream = uploadFile.inputStream()) {
+      final ByteBuffer byteBuffer = ByteBuffer.wrap(inputStream.readAllBytes());
       log.debug("Uploading {} bytes", byteBuffer.capacity());
 
       s3Client.putObject(request, RequestBody.fromByteBuffer(byteBuffer));
@@ -58,8 +60,10 @@ public class FileManagerAdapter implements ProfileImageStoragePort, ProfileImage
             .endpointOverride(endpointOverride)
             .build()) {
       log.debug("Generating temporary URL for object {}", key);
+      final String bucket = key.split("/")[0];
+      final String objectKey = key.replace(bucket + "/", "");
       final GetObjectRequest objectRequest =
-          GetObjectRequest.builder().bucket(bucketName).key(key).build();
+          GetObjectRequest.builder().bucket(bucket).key(objectKey).build();
 
       final GetObjectPresignRequest presignRequest =
           GetObjectPresignRequest.builder()
@@ -77,8 +81,10 @@ public class FileManagerAdapter implements ProfileImageStoragePort, ProfileImage
   public void delete(final String key) {
     try {
       log.debug("Deleting object {}", key);
+      final String bucket = key.split("/")[0];
+      final String objectKey = key.replace(bucket + "/", "");
       final DeleteObjectRequest deleteObjectRequest =
-          DeleteObjectRequest.builder().bucket(this.bucketName).key(key).build();
+          DeleteObjectRequest.builder().bucket(bucket).key(objectKey).build();
 
       this.s3Client.deleteObject(deleteObjectRequest);
 

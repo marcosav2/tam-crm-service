@@ -1,10 +1,10 @@
 package com.gmail.marcosav2010.crm.customer.ports;
 
-import java.io.InputStream;
+import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 
 public interface ProfileImageStoragePort {
 
-  String save(InputStream stream);
+  String save(UploadFile uploadFile);
 
   void delete(String key);
 }
