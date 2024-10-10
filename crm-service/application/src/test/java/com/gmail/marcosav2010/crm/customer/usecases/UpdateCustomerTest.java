@@ -8,6 +8,7 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,8 @@ class UpdateCustomerTest {
   @Mock private CustomerPort customerPort;
 
   @Mock private ProfileImageStoragePort profileImageStoragePort;
+
+  @Mock private ProfileImageURLProviderPort profileImageURLProviderPort;
 
   @InjectMocks private UpdateCustomerImpl updateCustomer;
 
@@ -55,6 +58,7 @@ class UpdateCustomerTest {
 
     final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "newImg";
+    final var mockedImageUrl = "url";
 
     final var updatedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
 
@@ -62,10 +66,12 @@ class UpdateCustomerTest {
     when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
     when(customerPort.update(updatedCustomer, user))
         .thenReturn(updatedCustomer.toBuilder().build());
+    when(profileImageURLProviderPort.generateURL(mockedImageKey)).thenReturn(mockedImageUrl);
 
     final var result = updateCustomer.execute(customer, mockedFile, user);
 
-    assertThat(result).isEqualTo(updatedCustomer);
+    assertThat(result)
+        .isEqualTo(updatedCustomer.toBuilder().profileImageUrl(mockedImageUrl).build());
 
     verify(customerPort).update(updatedCustomer, user);
     verify(profileImageStoragePort).delete(previousImageKey);
@@ -83,6 +89,7 @@ class UpdateCustomerTest {
 
     final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "newImg";
+    final var mockedImageUrl = "url";
 
     final var updatedCustomer = customer.toBuilder().profileImageUrl(mockedImageKey).build();
 
@@ -90,10 +97,12 @@ class UpdateCustomerTest {
     when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
     when(customerPort.update(updatedCustomer, user))
         .thenReturn(updatedCustomer.toBuilder().build());
+    when(profileImageURLProviderPort.generateURL(mockedImageKey)).thenReturn(mockedImageUrl);
 
     final var result = updateCustomer.execute(customer, mockedFile, user);
 
-    assertThat(result).isEqualTo(updatedCustomer);
+    assertThat(result)
+        .isEqualTo(updatedCustomer.toBuilder().profileImageUrl(mockedImageUrl).build());
 
     verify(customerPort).update(updatedCustomer, user);
     verify(profileImageStoragePort).save(mockedFile);
@@ -163,13 +172,14 @@ class UpdateCustomerTest {
     final var updatedCustomer =
         customer.toBuilder().profileImageUrl(existingCustomer.profileImageUrl()).build();
 
+    when(profileImageURLProviderPort.generateURL("img")).thenReturn("url");
     when(customerPort.findById(customer.id())).thenReturn(Optional.of(existingCustomer));
     when(customerPort.update(updatedCustomer, user))
         .thenReturn(updatedCustomer.toBuilder().build());
 
     final var result = updateCustomer.execute(customer, null, user);
 
-    assertThat(result).isEqualTo(updatedCustomer);
+    assertThat(result).isEqualTo(updatedCustomer.toBuilder().profileImageUrl("url").build());
 
     verify(customerPort).update(updatedCustomer, user);
     verifyNoInteractions(profileImageStoragePort);

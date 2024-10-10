@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,8 @@ class RegisterCustomerTest {
 
   @Mock private ProfileImageStoragePort profileImageStoragePort;
 
+  @Mock private ProfileImageURLProviderPort profileImageURLProviderPort;
+
   @InjectMocks private RegisterCustomerImpl registerCustomer;
 
   @Test
@@ -30,15 +33,17 @@ class RegisterCustomerTest {
 
     final var mockedFile = mock(UploadFile.class);
     final var mockedImageKey = "img";
+    final var mockedImageURL = "url";
 
     when(customerPort.register(any(), any())).thenReturn(customer.toBuilder().build());
     when(profileImageStoragePort.save(mockedFile)).thenReturn(mockedImageKey);
+    when(profileImageURLProviderPort.generateURL(mockedImageKey)).thenReturn(mockedImageURL);
 
     final var result = registerCustomer.execute(customer, mockedFile, user);
 
     final var savedCustomer =
         customer.toBuilder().active(true).profileImageUrl(mockedImageKey).build();
-    assertThat(result).isEqualTo(customer);
+    assertThat(result).isEqualTo(customer.toBuilder().profileImageUrl(mockedImageURL).build());
 
     verify(customerPort).register(savedCustomer, user);
     verify(profileImageStoragePort).save(mockedFile);

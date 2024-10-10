@@ -4,6 +4,7 @@ import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ public class UpdateCustomerImpl implements UpdateCustomer {
   private final CustomerPort customerPort;
 
   private final ProfileImageStoragePort profileImageStoragePort;
+
+  private final ProfileImageURLProviderPort profileImageURLProviderPort;
 
   @Override
   public Customer execute(
@@ -34,7 +37,11 @@ public class UpdateCustomerImpl implements UpdateCustomer {
         customer.toBuilder().active(existingCustomer.active()).profileImageUrl(imageKey).build();
 
     try {
-      return customerPort.update(customerToUpdate, user);
+      final var newProfileImageUrl =
+          imageKey != null ? profileImageURLProviderPort.generateURL(imageKey) : null;
+      return customerPort.update(customerToUpdate, user).toBuilder()
+          .profileImageUrl(newProfileImageUrl)
+          .build();
 
     } catch (Exception e) {
       if (profileImage != null) {

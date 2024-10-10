@@ -36,7 +36,7 @@ public class FileManagerAdapter implements ProfileImageStoragePort, ProfileImage
     final var originalExtension =
         uploadFile.fileName().substring(uploadFile.fileName().lastIndexOf("."));
     final var name = UUID.randomUUID().toString();
-    final var key = String.format("%s/%s/%s%s", bucketName, BASE_PATH, name, originalExtension);
+    final var key = String.format("%s/%s%s", BASE_PATH, name, originalExtension);
     final PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(key).build();
     log.debug("Saving object {} in bucket {}", key, bucketName);
 
@@ -46,7 +46,7 @@ public class FileManagerAdapter implements ProfileImageStoragePort, ProfileImage
 
       s3Client.putObject(request, RequestBody.fromByteBuffer(byteBuffer));
 
-      return key;
+      return bucketName + "/" + key;
     } catch (final Exception e) {
       throw new RuntimeException("Error saving object.", e);
     }

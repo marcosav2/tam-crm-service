@@ -7,6 +7,7 @@ import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.exception.UsernameAlreadyUsed;
 import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
+import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+@CustomLog
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -99,6 +101,7 @@ public class ControllerExceptionHandler {
 
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ErrorResponseDTO> genericException(final RuntimeException exception) {
+    log.error("Unexpected error", exception);
     return build(
         exception,
         HttpStatus.INTERNAL_SERVER_ERROR,

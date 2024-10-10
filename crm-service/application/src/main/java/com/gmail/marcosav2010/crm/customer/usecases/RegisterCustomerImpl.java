@@ -5,6 +5,7 @@ import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
 import java.io.InputStream;
 
+import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class RegisterCustomerImpl implements RegisterCustomer {
 
   private final ProfileImageStoragePort profileImageStoragePort;
 
+  private final ProfileImageURLProviderPort profileImageURLProviderPort;
+
   @Override
   public Customer execute(
       final Customer customer, final UploadFile profileImage, final String user) {
@@ -32,7 +35,11 @@ public class RegisterCustomerImpl implements RegisterCustomer {
     final var customerToSave = customer.toBuilder().active(true).profileImageUrl(imageKey).build();
 
     try {
-      return customerPort.register(customerToSave, user);
+      final var newProfileImageUrl =
+          profileImage != null ? profileImageURLProviderPort.generateURL(imageKey) : null;
+      return customerPort.register(customerToSave, user).toBuilder()
+          .profileImageUrl(newProfileImageUrl)
+          .build();
 
     } catch (Exception e) {
       if (imageKey != null) {

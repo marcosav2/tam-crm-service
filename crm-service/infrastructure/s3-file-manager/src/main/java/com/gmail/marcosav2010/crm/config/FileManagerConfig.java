@@ -34,6 +34,7 @@ public class FileManagerConfig {
   public S3Client s3Client() {
     final var s3Client =
         S3Client.builder()
+            .forcePathStyle(true)
             .region(Region.of(region))
             .credentialsProvider(() -> AwsBasicCredentials.create(accessKey, secretKey));
 
