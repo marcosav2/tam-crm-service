@@ -5,6 +5,7 @@ aws:
     access-key: ${AWS_ACCESS_KEY:secret}
     secret-key: ${AWS_SECRET_KEY:secret}
     endpoint: ${AWS_ENDPOINT:https://localhost.localstack.cloud:4566}
+    external-endpoint: ${AWS_EXTERNAL_ENDPOINT:https://localhost.localstack.cloud:4566}
 
 logging:
   level:

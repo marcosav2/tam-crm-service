@@ -19,6 +19,7 @@ aws:
     access-key: ${AWS_ACCESS_KEY}
     secret-key: ${AWS_SECRET_KEY}
     endpoint: ${AWS_ENDPOINT:#{null}}
+    external-endpoint: ${AWS_EXTERNAL_ENDPOINT:#{null}}
 
 crm:
   files:

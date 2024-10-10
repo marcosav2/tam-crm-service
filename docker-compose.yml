@@ -1,27 +1,28 @@
 name: crm-service
 
 services:
-#  crm-service:
-#    build:
-#      context: .
-#    depends_on:
-#      - postgres
-#      - localstack
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      DB_HOST: postgres
-#      DB_PORT: 5432
-#      DB_NAME: crm
-#      DB_USERNAME: db-user
-#      DB_PASSWORD: db-password
-#      AWS_REGION: eu-west-1
-#      AWS_BUCKET: crm-bucket
-#      AWS_ACCESS_KEY: secret
-#      AWS_SECRET_KEY: secret
-#      AWS_ACCESS_KEY_ID: secret
-#      AWS_SECRET_ACCESS_KEY: secret
-#      AWS_ENDPOINT: http://localstack:4566
+  crm-service:
+    build:
+      context: .
+    depends_on:
+      - postgres
+      - localstack
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: crm
+      DB_USERNAME: db-user
+      DB_PASSWORD: db-password
+      AWS_REGION: eu-west-1
+      AWS_BUCKET: crm-bucket
+      AWS_ACCESS_KEY: secret
+      AWS_SECRET_KEY: secret
+      AWS_ACCESS_KEY_ID: secret
+      AWS_SECRET_ACCESS_KEY: secret
+      AWS_ENDPOINT: http://localstack:4566
+      AWS_EXTERNAL_ENDPOINT: http://localhost:4566
 
   postgres:
     image: postgres:16.4

@@ -27,6 +27,9 @@ public class FileManagerConfig {
   @Value("${aws.s3.endpoint}")
   private String endpoint;
 
+  @Value("${aws.s3.external-endpoint}")
+  private String externalEndpoint;
+
   @Value("${crm.files.url-lifetime}")
   private long urlLifetime;
 
@@ -47,7 +50,10 @@ public class FileManagerConfig {
 
   @Bean
   public FileManagerAdapter fileManagerPort(final S3Client s3Client) {
-    final var endpointURI = endpoint == null ? null : URI.create(endpoint);
+    final var endpointURI =
+        endpoint == null
+            ? null
+            : URI.create(externalEndpoint == null ? endpoint : externalEndpoint);
     return new FileManagerAdapter(s3Client, bucketName, endpointURI, urlLifetime);
   }
 }
