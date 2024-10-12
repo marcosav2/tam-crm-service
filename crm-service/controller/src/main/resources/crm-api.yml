@@ -9,6 +9,8 @@ tags:
     description: Customer related operations
   - name: user
     description: User related operations
+  - name: auth
+    description: Authentication operations
 
 paths:
   /v1/customers:
@@ -33,6 +35,8 @@ paths:
             minimum: 1
             maximum: 50
             example: 10
+      security:
+        - BearerAuth: [ ]
       responses:
         200:
           description: Success response providing customers
@@ -65,6 +69,7 @@ paths:
       summary: Creates a new customer
       operationId: createCustomer
       requestBody:
+        required: true
         content:
           multipart/form-data:
             schema:
@@ -87,13 +92,15 @@ paths:
             encoding:
               profileImage:
                 contentType: image/png, image/jpeg
+      security:
+        - BearerAuth: [ ]
       responses:
         201:
           description: Successfully created customer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerOverview'#/components/responses/CreatedCustomerResponse'
+                $ref: '#/components/schemas/CustomerOverview'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -120,6 +127,8 @@ paths:
           schema:
             type: string
             format: uuid
+      security:
+        - BearerAuth: [ ]
       responses:
         200:
           description: Customer details response
@@ -151,6 +160,7 @@ paths:
             type: string
             format: uuid
       requestBody:
+        required: true
         content:
           multipart/form-data:
             schema:
@@ -173,6 +183,8 @@ paths:
             encoding:
               profileImage:
                 contentType: image/png, image/jpeg
+      security:
+        - BearerAuth: [ ]
       responses:
         200:
           description: Successfully updated customer
@@ -207,6 +219,8 @@ paths:
           schema:
             type: string
             format: uuid
+      security:
+        - BearerAuth: [ ]
       responses:
         204:
           description: Successfully deleted customer
@@ -234,6 +248,8 @@ paths:
           schema:
             type: string
             format: uuid
+      security:
+        - BearerAuth: [ ]
       responses:
         204:
           description: Successfully deleted customer profile image
@@ -270,6 +286,8 @@ paths:
             minimum: 1
             maximum: 100
             example: 10
+      security:
+        - BearerAuth: [ ]
       responses:
         200:
           description: Success response providing users
@@ -302,6 +320,7 @@ paths:
       summary: Creates a new user
       operationId: createUser
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -316,9 +335,11 @@ paths:
                 username:
                   type: string
                   minLength: 5
-                  maxLength: 16
+                  maxLength: 24
                 password:
                   type: string
+                  minLength: 8
+                  maxLength: 50
                 name:
                   type: string
                   minLength: 2
@@ -329,6 +350,8 @@ paths:
                   maxLength: 30
                 role:
                   $ref: '#/components/schemas/UserRole'
+      security:
+        - BearerAuth: [ ]
       responses:
         201:
           description: Successfully created user
@@ -362,6 +385,8 @@ paths:
           schema:
             type: string
             format: uuid
+      security:
+        - BearerAuth: [ ]
       responses:
         200:
           description: User details response
@@ -393,18 +418,19 @@ paths:
             type: string
             format: uuid
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
               required:
-                - password
                 - name
                 - surname
                 - role
               properties:
                 password:
                   type: string
+                  maxLength: 50
                 name:
                   type: string
                   minLength: 2
@@ -415,6 +441,8 @@ paths:
                   maxLength: 30
                 role:
                   $ref: '#/components/schemas/UserRole'
+      security:
+        - BearerAuth: [ ]
       responses:
         200:
           description: Successfully updated user
@@ -449,6 +477,8 @@ paths:
           schema:
             type: string
             format: uuid
+      security:
+        - BearerAuth: [ ]
       responses:
         204:
           description: Successfully deleted user
@@ -463,7 +493,41 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
 
+  /auth/token:
+    post:
+      tags:
+        - auth
+      summary: Authenticates a user
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        200:
+          description: Successfully authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/ServerError'
+
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   responses:
     BadRequest:
       description: Bad request
@@ -509,6 +573,31 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
 
   schemas:
+    Credentials:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token expiration time in seconds
+
     CustomerOverview:
       type: object
       required:

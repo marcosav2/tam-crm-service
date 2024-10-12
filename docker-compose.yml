@@ -23,6 +23,7 @@ services:
       AWS_SECRET_ACCESS_KEY: secret
       AWS_ENDPOINT: http://localstack:4566
       AWS_EXTERNAL_ENDPOINT: http://localhost:4566
+      JWT_SECRET: thisisjustfordevelopmentpurposessodefineyourownsecretwiththisenv
 
   postgres:
     image: postgres:16.4

@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 import com.gmail.marcosav2010.crm.user.entities.User;
 import com.gmail.marcosav2010.crm.user.entities.UserRole;
 import com.gmail.marcosav2010.crm.user.exception.UsernameAlreadyUsed;
+import com.gmail.marcosav2010.crm.user.ports.PasswordEncryptionPort;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
-import com.gmail.marcosav2010.crm.user.usecases.CreateUserImpl;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +23,8 @@ class CreateUserTest {
 
   @Mock private UserPort userPort;
 
+  @Mock private PasswordEncryptionPort passwordEncryptionPort;
+
   @InjectMocks private CreateUserImpl createUser;
 
   @Test
@@ -30,6 +32,7 @@ class CreateUserTest {
     final var user =
         User.builder()
             .username("aaa1234")
+            .password("password")
             .name("name")
             .surname("email")
             .role(UserRole.USER)
@@ -37,12 +40,14 @@ class CreateUserTest {
 
     when(userPort.findByUsername(any())).thenReturn(Optional.empty());
     when(userPort.register(any())).thenReturn(user);
+    when(passwordEncryptionPort.process(any())).thenReturn("encrypted");
 
     final var result = createUser.execute(user);
 
     assertThat(result).isEqualTo(user);
 
-    verify(userPort).register(user.toBuilder().active(true).build());
+    verify(userPort).register(user.toBuilder().password("encrypted").active(true).build());
+    verify(passwordEncryptionPort).process("password");
   }
 
   @Test

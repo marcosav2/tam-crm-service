@@ -5,12 +5,18 @@ import com.gmail.marcosav2010.crm.customer.exceptions.CustomerNotFound;
 import com.gmail.marcosav2010.crm.shared.exception.DomainValidationException;
 import com.gmail.marcosav2010.crm.user.exception.UserNotFound;
 import com.gmail.marcosav2010.crm.user.exception.UsernameAlreadyUsed;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 import lombok.CustomLog;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -93,6 +99,22 @@ public class ControllerExceptionHandler {
     return build(exception, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler({
+    BadCredentialsException.class,
+    SignatureException.class,
+    ExpiredJwtException.class,
+    UsernameNotFoundException.class,
+    InsufficientAuthenticationException.class
+  })
+  public ResponseEntity<ErrorResponseDTO> badCredentials(final Exception exception) {
+    return build(exception, HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponseDTO> accessDenied(final Exception exception) {
+    return build(exception, HttpStatus.FORBIDDEN);
+  }
+
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorResponseDTO> genericBadRequest(
       final HttpMessageNotReadableException exception) {
@@ -105,7 +127,7 @@ public class ControllerExceptionHandler {
     return build(
         exception,
         HttpStatus.INTERNAL_SERVER_ERROR,
-        exception.getClass().getName() + " - " + exception.getMessage());
+        exception.getClass().getSimpleName() + " - " + exception.getMessage());
   }
 
   private ResponseEntity<ErrorResponseDTO> build(

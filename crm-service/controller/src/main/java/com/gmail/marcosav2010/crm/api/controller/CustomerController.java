@@ -5,6 +5,7 @@ import com.gmail.marcosav2010.crm.api.dto.CustomerOverviewDTO;
 import com.gmail.marcosav2010.crm.api.dto.ListCustomers200ResponseDTO;
 import com.gmail.marcosav2010.crm.api.helpers.FileHelper;
 import com.gmail.marcosav2010.crm.api.mappers.ControllerCustomerMapper;
+import com.gmail.marcosav2010.crm.api.security.AuthCtx;
 import com.gmail.marcosav2010.crm.api.validation.Validate;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.entities.CustomerListRequest;
@@ -37,18 +38,18 @@ public class CustomerController implements CustomerApi {
     final var customer = Customer.builder().name(name).surname(surname).build();
     final var file = FileHelper.toDomain(profileImage);
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(mapper.mapOverview(registerCustomer.execute(customer, file, "user")));
+        .body(mapper.mapOverview(registerCustomer.execute(customer, file, AuthCtx.getUser())));
   }
 
   @Override
   public ResponseEntity<Void> deleteCustomer(UUID id) {
-    deleteCustomer.execute(id, "user");
+    deleteCustomer.execute(id, AuthCtx.getUser());
     return ResponseEntity.noContent().build();
   }
 
   @Override
   public ResponseEntity<Void> deleteCustomerProfileImage(UUID id) {
-    deleteCustomerProfileImage.execute(id, "user");
+    deleteCustomerProfileImage.execute(id, AuthCtx.getUser());
     return ResponseEntity.noContent().build();
   }
 
@@ -59,6 +60,7 @@ public class CustomerController implements CustomerApi {
 
   @Override
   public ResponseEntity<ListCustomers200ResponseDTO> listCustomers(Integer page, Integer size) {
+    System.out.println(AuthCtx.getUser());
     final var request =
         CustomerListRequest.builder().page(Page.builder().page(page).size(size).build()).build();
     return ResponseEntity.ok(mapper.map(listActiveCustomers.execute(request)));
@@ -70,6 +72,7 @@ public class CustomerController implements CustomerApi {
     Validate.imageType(profileImage);
     final var customer = Customer.builder().id(id).name(name).surname(surname).build();
     final var file = FileHelper.toDomain(profileImage);
-    return ResponseEntity.ok(mapper.mapOverview(updateCustomer.execute(customer, file, "user")));
+    return ResponseEntity.ok(
+        mapper.mapOverview(updateCustomer.execute(customer, file, AuthCtx.getUser())));
   }
 }

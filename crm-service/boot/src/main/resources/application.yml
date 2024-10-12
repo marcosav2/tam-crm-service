@@ -25,6 +25,12 @@ crm:
   files:
     url-lifetime: ${CRM_URL_LIFETIME:7200}
 
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION:86400}
+
 logging:
   level:
+    org.springframework: ${LOG_LEVEL:INFO}
     com.gmail.marcosav2010.crm: ${LOG_LEVEL:INFO}

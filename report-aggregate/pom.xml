@@ -48,6 +48,11 @@
             <artifactId>crm-service-infrastructure-cache-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>crm-service-infrastructure-encryption</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -14,10 +14,14 @@ public record User(
     boolean active,
     UserRole role) {
 
+  public void validatePassword() {
+    Validate.length("password", password, 8, 50);
+  }
+
   public static class UserBuilder {
 
     public UserBuilder username(String username) {
-      Validate.length("username", username, 5, 16);
+      Validate.length("username", username, 5, 24);
       Validate.alphanumericPlus("username", username);
       this.username = username;
       return this;

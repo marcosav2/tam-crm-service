@@ -7,6 +7,11 @@ aws:
     endpoint: ${AWS_ENDPOINT:https://localhost.localstack.cloud:4566}
     external-endpoint: ${AWS_EXTERNAL_ENDPOINT:https://localhost.localstack.cloud:4566}
 
+security:
+  jwt:
+    secret: ${JWT_SECRET:thisisjustfordevelopmentpurposessodefineyourownsecretwiththisenv}
+
 logging:
   level:
+    org.springframework: ${LOG_LEVEL:TRACE}
     com.gmail.marcosav2010.crm: ${LOG_LEVEL:DEBUG}
