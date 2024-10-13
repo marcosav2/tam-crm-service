@@ -57,6 +57,13 @@ are using `local` Spring profile (`SPRING_PROFILES_ACTIVE`):
 mvn spring-boot:run
 ```
 
+### CI/CD
+
+A basic CI/CD pipeline is provided using Github Actions, which will execute `verify` goal to generate JaCoCo coverage of
+all unit and integration tests and check if the coverage is above the defined threshold.
+
+If everything is OK, it will build and publish the application image to the Docker Hub registry.
+
 ## Testing
 
 ### Unit Tests
@@ -101,6 +108,11 @@ This command will make use of Liquibase to initialize the database schema, but i
 order to create an `admin` user with password `password`, this is meant to be used only in a local environment.
 
 `crm-service` container can be built and run separately, but it will need the other services to be up and running.
+
+### Docker Hub Image
+
+The application image is built and published to the Docker Hub registry using Github Actions when pushed to `main`
+branch, you can check the latest image [here](https://hub.docker.com/repository/docker/marcosav/tam-crm-service).
 
 ## Environment Variables
 

@@ -4,6 +4,7 @@ services:
   crm-service:
     build:
       context: .
+#    image: marcosav/tam-crm-service:latest
     depends_on:
       - postgres
       - localstack
