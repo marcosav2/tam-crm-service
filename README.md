@@ -97,6 +97,9 @@ Localstack & AWS CLI to initialize S3 bucket), leaving the usage as simple as:
 docker-compose up
 ```
 
+This command will make use of Liquibase to initialize the database schema, but it will also execute a second command in
+order to create an `admin` user with password `password`, this is meant to be used only in a local environment.
+
 `crm-service` container can be built and run separately, but it will need the other services to be up and running.
 
 ## Environment Variables

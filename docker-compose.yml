@@ -41,10 +41,20 @@ services:
     image: liquibase/liquibase:4.29
     depends_on:
       - postgres
+    environment:
+      DB_NAME: crm
+      DB_USERNAME: db-user
+      DB_PASSWORD: db-password
     volumes:
       - ./db/config/:/liquibase/changelog
       - ./crm-service/:/liquibase/changelog/crm-service
-    command: --searchPath=/liquibase/changelog --changeLogFile=changelog.xml --url=jdbc:postgresql://postgres:5432/crm --username=db-user --password=db-password update
+      - ./init_data.sql:/init_data.sql
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        liquibase --searchPath=/liquibase/changelog --changeLogFile=changelog.xml --url=jdbc:postgresql://postgres:5432/$${DB_NAME} --username=$${DB_USERNAME} --password=$${DB_PASSWORD} update
+        liquibase --sql-file=/init_data.sql --url=jdbc:postgresql://postgres:5432/$${DB_NAME} --username=$${DB_USERNAME} --password=$${DB_PASSWORD} execute-sql
+      "
 
   localstack:
     image: localstack/localstack:3.8.1
@@ -69,10 +79,11 @@ services:
       AWS_ACCESS_KEY_ID: secret
       AWS_SECRET_ACCESS_KEY: secret
       AWS_DEFAULT_REGION: eu-west-1
+      AWS_BUCKET: crm-bucket
     entrypoint: /bin/sh -c
     command: >
       "
-        aws --endpoint-url=http://localstack:4566 s3 mb s3://crm-bucket --region=eu-west-1
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://$${AWS_BUCKET} --region=$${AWS_DEFAULT_REGION}
       "
 
 volumes:
