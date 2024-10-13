@@ -8,7 +8,6 @@ import com.gmail.marcosav2010.crm.shared.entities.Page;
 import com.gmail.marcosav2010.crm.user.entities.User;
 import com.gmail.marcosav2010.crm.user.entities.UserListRequest;
 import com.gmail.marcosav2010.crm.user.ports.UserPort;
-import com.gmail.marcosav2010.crm.user.usecases.ListActiveUsersImpl;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

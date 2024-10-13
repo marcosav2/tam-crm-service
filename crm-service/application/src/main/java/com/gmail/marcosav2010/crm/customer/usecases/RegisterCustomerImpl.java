@@ -3,8 +3,6 @@ package com.gmail.marcosav2010.crm.customer.usecases;
 import com.gmail.marcosav2010.crm.customer.entities.Customer;
 import com.gmail.marcosav2010.crm.customer.ports.CustomerPort;
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageStoragePort;
-import java.io.InputStream;
-
 import com.gmail.marcosav2010.crm.customer.ports.ProfileImageURLProviderPort;
 import com.gmail.marcosav2010.crm.shared.entities.UploadFile;
 import lombok.CustomLog;

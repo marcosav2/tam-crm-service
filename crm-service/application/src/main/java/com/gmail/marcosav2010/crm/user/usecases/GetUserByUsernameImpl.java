@@ -21,6 +21,7 @@ public class GetUserByUsernameImpl implements GetUserByUsername {
     return userPort
         .findByUsername(username)
         .filter(User::active)
-        .orElseThrow(() -> new UserNotFound("User not found or inactive for username: " + username));
+        .orElseThrow(
+            () -> new UserNotFound("User not found or inactive for username: " + username));
   }
 }

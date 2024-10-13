@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class Validate {
 
-  private static final Pattern ALPHANUMERIC_PLUS_PATTERN = Pattern.compile("[A-Za-zÀ-ÖØ-öø-ÿ0-9 \\-_.]+");
+  private static final Pattern ALPHANUMERIC_PLUS_PATTERN =
+      Pattern.compile("[A-Za-zÀ-ÖØ-öø-ÿ0-9 \\-_.]+");
 
   public static void notNull(final String field, final Object value) {
     if (value == null) {
