@@ -34,3 +34,9 @@ logging:
   level:
     org.springframework: ${LOG_LEVEL:INFO}
     com.gmail.marcosav2010.crm: ${LOG_LEVEL:INFO}
+
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}

@@ -3,6 +3,7 @@
 ## Description
 
 This is a customer management service made in Java.
+
 The project is based on a Hexagonal Architecture (using Ports and Adapters pattern) & DDD (Domain Driven Design).
 Made following an API First approach (more info about it below).
 
@@ -78,25 +79,38 @@ docker-compose up
 
 The following environment variables can be set to configure the application:
 
-| Property                 | Description                                                                           | Info/Default value                                            |
-|--------------------------|---------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| `LOG_LEVEL`              | Log level for the application                                                         | `INFO` and `DEBUG` for `local` profile                        |
-| `SERVER_PORT`            | Port where the application will be deployed                                           | `8080`                                                        |
-| `DB_HOST`                | Database host                                                                         | `localhost`                                                   |
-| `DB_PORT`                | Database port                                                                         | `5432`                                                        |
-| `DB_NAME`                | Database name                                                                         | `crm`                                                         |
-| `DB_PARAMS`              | Database connection parameters                                                        |                                                               |
-| `DB_USERNAME`            | Database user                                                                         | `db-user`                                                     |
-| `DB_PASSWORD`            | Database password                                                                     | `db-password`                                                 |
-| `AWS_REGION`             | AWS region                                                                            | `eu-west-1` for `local` profile                               |
-| `AWS_BUCKET`             | AWS bucket                                                                            | `crm-bucket` for `local` profile                              
-| `AWS_ACCESS_KEY`         | AWS access key                                                                        | `secret` for `local` profile                                  |
-| `AWS_SECRET_KEY`         | AWS secret key                                                                        | `secret` for `local` profile                                  |
-| `AWS_ENDPOINT`           | AWS S3 endpoint                                                                       | `https://localhost.localstack.cloud:4566` for `local` profile |
-| `AWS_EXTERNAL_ENDPOINT`  | AWS S3 endpoint for signed URL (see `docker-compose.yml`)                             | `https://localhost.localstack.cloud:4566` for `local` profile |
-| `JWT_SECRET`             | JWT secret key                                                                        | A random insecure secret is default set for `local` profile   |
-| `JWT_EXPIRATION`         | JWT expiration time in seconds                                                        | `86400`                                                       |
-| `CRM_URL_LIFETIME`       | Customer profile image URL expiration time in seconds                                 | `7200`                                                        |
+| Property                | Description                                               | Info/Default value                                            |
+|-------------------------|-----------------------------------------------------------|---------------------------------------------------------------|
+| `LOG_LEVEL`             | Log level for the application                             | `INFO` and `DEBUG` for `local` profile                        |
+| `DB_HOST`               | Database host                                             | `localhost`                                                   |
+| `DB_PORT`               | Database port                                             | `5432`                                                        |
+| `DB_NAME`               | Database name                                             | `crm`                                                         |
+| `DB_PARAMS`             | Database connection parameters                            |                                                               |
+| `DB_USERNAME`           | Database user                                             | `db-user`                                                     |
+| `DB_PASSWORD`           | Database password                                         | `db-password`                                                 |
+| `AWS_REGION`            | AWS region                                                | `eu-west-1` for `local` profile                               |
+| `AWS_BUCKET`            | AWS bucket                                                | `crm-bucket` for `local` profile                              
+| `AWS_ACCESS_KEY`        | AWS access key                                            | `secret` for `local` profile                                  |
+| `AWS_SECRET_KEY`        | AWS secret key                                            | `secret` for `local` profile                                  |
+| `AWS_ENDPOINT`          | AWS S3 endpoint                                           | `https://localhost.localstack.cloud:4566` for `local` profile |
+| `AWS_EXTERNAL_ENDPOINT` | AWS S3 endpoint for signed URL (see `docker-compose.yml`) | `https://localhost.localstack.cloud:4566` for `local` profile |
+| `JWT_SECRET`            | JWT secret key                                            | A random insecure secret is default set for `local` profile   |
+| `JWT_EXPIRATION`        | JWT expiration time in seconds                            | `86400`                                                       |
+| `CRM_URL_LIFETIME`      | Customer profile image URL expiration time in seconds     | `7200`                                                        |
 
+### Other environment variables
 
-`SPRING_PROFILES_ACTIVE` environment variable should be set to `local` for local deployment, check default values in the table above.                                                       |
+`SPRING_PROFILES_ACTIVE` environment variable should be set to `local` for local deployment, check default values in the
+table above. |
+`SERVER_PORT` will set port where the application will be deployed, defaults to `8080`.
+`SWAGGER_ENABLED` will enable/disable Swagger UI and docs, defaults to `false`, and `true` for `local` profile.
+
+## API Specification
+
+You will be able to access to the OpenAPI specification in the following URLs:
+
+Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+OpenAPI Docs: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+NOTE: Check `SWAGGER_ENABLED` environment variable to enable/disable Swagger UI and docs.
