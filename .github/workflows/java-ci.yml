@@ -29,7 +29,7 @@ jobs:
       - name: Execute Unit & Integration Tests with Coverage
         run: mvn verify -P integration-tests
 
-      - name: Add coverage to PR
+      - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.7.1
         with:
@@ -38,5 +38,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 60
           min-coverage-changed-files: 60
+
+      - name: Check coverage
+        if: ${{ steps.jacoco.outputs.coverage-overall < 60.0 }}
+        uses: actions/github-script@v6
+        with:
           script: |
-            core.setFailed('Overall coverage is less than 80%!')
+            core.setFailed('Overall coverage is under 60%!')
