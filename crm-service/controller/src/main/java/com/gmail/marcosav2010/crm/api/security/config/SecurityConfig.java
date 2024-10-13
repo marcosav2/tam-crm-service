@@ -42,8 +42,7 @@ public class SecurityConfig {
       HandlerExceptionResolver handlerExceptionResolver)
       throws Exception {
     return http.authorizeHttpRequests(
-            c ->
-                c.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+            c -> c.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                     .permitAll()
                     .requestMatchers("/v1/customers/**")
                     .hasAnyRole(UserRole.USER.name(), UserRole.ADMIN.name())
