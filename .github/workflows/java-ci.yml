@@ -44,4 +44,4 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            core.setFailed('Overall coverage is under 60%!')
+            core.setFailed('Overall coverage is under 60% (' + '${{ steps.jacoco.outputs.coverage-overall }}' + '%)')
