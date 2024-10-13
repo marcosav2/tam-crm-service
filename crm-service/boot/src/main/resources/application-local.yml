@@ -13,5 +13,5 @@ security:
 
 logging:
   level:
-    org.springframework: ${LOG_LEVEL:TRACE}
+    org.springframework: ${LOG_LEVEL:DEBUG}
     com.gmail.marcosav2010.crm: ${LOG_LEVEL:DEBUG}
