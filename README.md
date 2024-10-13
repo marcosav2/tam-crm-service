@@ -2,34 +2,56 @@
 
 ## Description
 
-This is a customer management service made in Java.
+This is a CRM service made in Java, provides the following features:
 
-The project is based on a Hexagonal Architecture (using Ports and Adapters pattern) & DDD (Domain Driven Design).
-Made following an API First approach (more info about it below).
+- Customer management (CRUD and profile image upload).
+- User management.
+
+## Technical Information
+
+The project is based on a Hexagonal Architecture (using Ports and Adapters pattern) & DDD (Domain Driven Design), which
+will decouple the business core from the technical details, externalizing and making them depend on the business needs,
+leaving an easy testable and maintainable application.
+
+API First approach has been followed, using OpenAPI to define the REST API.
 
 Persistence is achieved using a PostgreSQL database for user and customer data, and S3 for customer profile images.
 
-## Requirements
+### Structure
 
-- JDK 21 & Maven
-- Lombok plugin (installation depends on IDE)
-- Docker (Integration Tests & Deployment)
-- [google-java-format](https://github.com/google/google-java-format) plugin
+The project is divided into the following modules:
 
-## Code format
+- `domain`: Business entities and domain use case definitions (DDD).
+- `application`: Domain use case specific implementations and port definitions.
+- `infrastructure`: Driven port implementations (adapters) to interact with external systems (customer & user database,
+  S3 for file uploading & cache for image URLs).
+- `controller`: API controllers (Driver ports) and authentication implementation.
+- `boot`: Application entry point.
+
+### Code format
 
 This project follows [Google Java Style](https://google.github.io/styleguide/javaguide.html) conventions.
 
 ## Development
 
+### Requirements
+
+- JDK 21 & Maven.
+- Lombok plugin (installation depends on IDE).
+- Docker (Integration Tests & Deployment) or Localstack/PostgreSQL to provide needed infrastructure.
+- [google-java-format](https://github.com/google/google-java-format) plugin.
+
+### Execution
+
 To start setting things up execute the following, this will generate needed mappers and APIs (model & controller),
-compile the project and execute tests:
+compile the project and execute unit tests:
 
 ```
 mvn clean install
 ```
 
-To execute the application (locally), using `local` Spring profile (`SPRING_PROFILES_ACTIVE`):
+To execute the application (locally), make sure you have the needed infra running (read Deployment with Docker) and you
+are using `local` Spring profile (`SPRING_PROFILES_ACTIVE`):
 
 ```
 mvn spring-boot:run
@@ -74,6 +96,8 @@ Localstack & AWS CLI to initialize S3 bucket), leaving the usage as simple as:
 ```
 docker-compose up
 ```
+
+`crm-service` container can be built and run separately, but it will need the other services to be up and running.
 
 ## Environment Variables
 
