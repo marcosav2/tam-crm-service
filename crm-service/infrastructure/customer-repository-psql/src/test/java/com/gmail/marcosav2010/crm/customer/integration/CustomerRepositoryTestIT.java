@@ -58,7 +58,7 @@ class CustomerRepositoryTestIT {
 
   @Test
   void insert() {
-    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC);
+    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC).withNano(0);
     final var customer =
         Customer.builder()
             .id(UUID.randomUUID())
@@ -81,7 +81,7 @@ class CustomerRepositoryTestIT {
 
   @Test
   void update() {
-    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC);
+    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC).withNano(0);
     final var customer =
         Customer.builder()
             .id(UUID.randomUUID())
@@ -102,7 +102,8 @@ class CustomerRepositoryTestIT {
             .name("newName")
             .surname("surname2")
             .profileImageUrl("profileImageUrl2")
-            .updatedAt(OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC))
+            .updatedAt(
+                OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC).plusHours(1).withNano(0))
             .updatedBy("user")
             .active(false)
             .build();
@@ -124,7 +125,7 @@ class CustomerRepositoryTestIT {
 
   @Test
   void findActive() {
-    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC);
+    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC).withNano(0);
     final var customer =
         Customer.builder()
             .id(UUID.randomUUID())
@@ -147,7 +148,7 @@ class CustomerRepositoryTestIT {
 
   @Test
   void countActive() {
-    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC);
+    final var dateTime = OffsetDateTime.now().withOffsetSameLocal(ZoneOffset.UTC).withNano(0);
     final var customer =
         Customer.builder()
             .id(UUID.randomUUID())
