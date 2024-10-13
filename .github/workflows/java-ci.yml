@@ -38,7 +38,7 @@ jobs:
           min-coverage-overall: 70
           min-coverage-changed-files: 70
 
-      - name: Check coverage
+      - name: Fail if low coverage
         if: ${{ steps.jacoco.outputs.coverage-overall < 70.0 }}
         uses: actions/github-script@v6
         with:
